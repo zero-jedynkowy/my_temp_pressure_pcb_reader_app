@@ -6,6 +6,7 @@ function createWindow () {
     minWidth: 800,
     minHeight: 600,
     resizable: false,
+    transparent: true,
     frame: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
@@ -13,7 +14,7 @@ function createWindow () {
   })
 
   win.loadFile('index.html')
-  win.webContents.openDevTools();
+//   win.webContents.openDevTools();
 }
 
 app.whenReady().then(() => {
