@@ -1,0 +1,62 @@
+*
+{
+    font-family: "Kanit";
+    color: white;
+}
+
+body
+{
+    background-color: rgb(56, 56, 56);
+}
+
+.topBar
+{
+    height: fit-content;
+    font-size: 1.2rem;
+    background-color: rgb(39, 39, 39);
+    -webkit-app-region: drag;
+    /* margin: 0;
+    padding: 0; */
+}
+
+.topBarSections
+{
+    /* margin: 0; */
+    padding: 0; 
+}
+
+
+.appTitle
+{
+    /* width: 50%; */
+    text-align: center;
+    height: max-content;
+} 
+
+.windowButtons
+{
+    font-size: 1.2em;
+}
+
+.closeApp, .maximizeApp, .minimalizeApp
+{
+    padding: 0.25em 0.5em 0.25em 0.5em;
+    cursor: pointer;
+    -webkit-app-region: no-drag;
+    /* background-color: red; */
+}
+
+.maximizeApp:hover, .minimalizeApp:hover
+{
+    background-color: rgb(31, 31, 31);
+}
+
+.closeApp
+{
+    background-color: red;
+}
+
+.closeApp:hover
+{
+    background-color: rgb(189, 0, 0);
+}
