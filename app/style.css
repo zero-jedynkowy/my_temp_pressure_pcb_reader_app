@@ -6,55 +6,54 @@
 
 body
 {
-    background-color: rgb(56, 56, 56);
     background: none;
+    height: 550px;
+    display: none;
+    width: 800px;
 }
 
 .topBar
 {
     height: fit-content;
     font-size: 1.2rem;
-    background-color: rgb(214, 214, 214);
+    background-color: rgb(231, 231, 231);
     -webkit-app-region: drag;
-    border-top-right-radius: 10px 10px;
-    border-top-left-radius: 10px 10px;
-}
-
-.topBarSections
-{
-    padding: 0; 
+    border-top-right-radius: 15px 15px;
+    border-top-left-radius: 15px 15px;
 }
 
 .appTitle
 {
     text-align: center;
     height: max-content;
+    font-weight: bold;
 } 
 
 .windowButtons
 {
     font-size: 1.2em;
+    font-weight: bold;
 }
 
-.closeApp, .maximizeApp, .minimalizeApp
+.closeAppBtn, .maximizeAppBtn, .minimalizeAppBtn
 {
-    padding: 0.25em 0.5em 0.25em 0.5em;
-    cursor: pointer;
-    -webkit-app-region: no-drag;
+padding: 0.25em 0.5em 0.25em 0.5em;
+cursor: pointer;
+-webkit-app-region: no-drag;
 }
 
-.maximizeApp:hover, .minimalizeApp:hover
+.maximizeAppBtn:hover, .minimalizeAppBtn:hover
 {
-    background-color: rgb(31, 31, 31);
+    background-color: rgb(206, 206, 206);
 }
 
-.closeApp
+.closeAppBtn
 {
     background-color: red;
-    border-top-right-radius: 10px 10px;
+    border-top-right-radius: 15px 15px;
 }
 
-.closeApp:hover
+.closeAppBtn:hover
 {
     background-color: rgb(189, 0, 0);
 }
@@ -63,29 +62,24 @@ body
 {
     width: 100%;
     background-color: white;
-    height: fit-content;
-    border-bottom-right-radius: 10px 10px;
-    border-bottom-left-radius: 10px 10px;
-}
-
-.chooseDeviceContent
-{
-    width: 100%;
-    /* height: 100%; */
+    height: 100%;
+    border-bottom-right-radius: 15px 15px;
+    border-bottom-left-radius: 15px 15px;
+    overflow: auto;
 }
 
 .chooseDeviceTitle
 {
     width: 100%;
-    padding: 0.5em 0 0em 1em;
+    padding: 0.5em 0 0em 0.75em;
     font-size: 2.5em;
+    font-weight: bold;
 }
 
 .chooseDeviceSubpanel
 {
     width: 100%;
     height: fit-content;
-    /* background-color: red; */
 }
 
 .devicesList
@@ -102,7 +96,6 @@ body
     width: 40%;
     height: 200px;
     padding: 1.5em;
-    /* background-color: blue; */
 }
 
 .chooseDeviceButton
@@ -159,4 +152,260 @@ body
     background-color: rgb(180, 180, 180);
     border-top-right-radius: 5px 5px;
     border-bottom-right-radius: 5px 5px;
+}
+
+.deviceMainTitle
+{
+    padding: 0.5em;
+    margin: 0;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.deviceSubtitle
+{
+    padding: 0 0.5em 0.5em;
+    margin: 0;
+}
+
+.device:first-child
+{
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-top: none;
+}
+
+.device
+{
+    border-top: 1px solid black;
+    background-color: white;
+    cursor: pointer;
+    padding: 0.5em;
+    color: black;
+}
+
+.device:last-child
+{
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.devicesList
+{
+    padding: 0.5em;
+}
+
+.subDevicesList
+{
+    overflow: overlay;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px 10px;
+    border-top-left-radius: 10px 10px;
+}
+
+.subDevicesList::-webkit-scrollbar 
+{
+    width:0px; 
+}
+.subDevicesList::-webkit-scrollbar * 
+{
+    background:transparent; 
+}
+.subDevicesList::-webkit-scrollbar-thumb 
+{
+    background:rgba(255,0,0,0.1) !important; 
+}
+
+.curtain
+{
+    background-color: white;
+}
+
+.idDevice
+{
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.dataPanel
+{
+    padding: 1.5em;
+}
+
+.temperature
+{
+    margin-right: 1.5em;
+}
+
+.temperature, .pressure
+{
+    width: 50%;
+    padding: 1em;
+    font-weight: bold;
+}
+
+.measTitle
+{
+    font-size: 1.5em;
+    padding: 0;
+    margin: 0;
+}
+
+.measValue
+{
+    font-size: 3em;
+    padding: 0;
+    margin: 0;
+}
+
+.measSubtitle
+{
+    font-size: 1.1em;
+    font-weight: bold;
+    margin: 1em 0 0.5em 0;
+    padding: 0;
+}
+
+.measInput
+{
+    width: 100%;
+}
+
+.measInput > input
+{
+    border-bottom-left-radius: 10px 10px;
+    border-top-left-radius: 10px 10px;
+    font-weight: bold;
+    font-size: 1.2em;
+    border: 0;
+    padding: 0.5em;
+    width: 100%;
+}
+
+.measInput > i
+{
+    background-color: green;
+    color: white;
+    padding: 1em;
+    border-bottom-right-radius: 10px;
+    cursor: pointer;
+    border-top-right-radius: 10px 10px;
+}
+
+input:focus, input:active
+{
+    outline: 0;
+    outline-color: transparent;
+    outline-style: none;
+}
+
+*::-webkit-scrollbar 
+{
+    height: 10px;
+    width: 10px;
+}
+*::-webkit-scrollbar-track 
+{
+    background-color: #DFE9EB;
+}
+
+*::-webkit-scrollbar-thumb 
+{
+    background-color: rgb(167, 167, 167);
+}
+
+.bottomUpdateBar
+{
+    border-bottom-left-radius: 15px 15px;
+    margin: 0;
+    font-weight: bold;
+    padding: 0.5em 0 0.5em 1em;
+    background-color: rgb(231, 231, 231);
+    width: 100%;
+}
+
+.dot 
+{
+    height: 10px;
+    width: 10px;
+    background-color: #bbb;
+    background-color: green;
+    border-radius: 50%;
+    margin-right: 0.5em;
+}
+
+.marked
+{
+    /* background-color: rgb(155, 155, 155); */
+}
+
+:not(input):not(textarea),
+:not(input):not(textarea)::after,
+:not(input):not(textarea)::before {
+    -webkit-user-select: none;
+    user-select: none;
+}
+input, button, textarea, :focus {
+    outline: none;
+}
+
+.myDialogBack
+{
+    background-color: black; 
+    opacity: 0.7;
+    display: none;
+}
+
+.myDialog
+{
+    background-color: white; 
+    width: 400px; 
+    height: fit-content;
+    display: none;
+    opacity: 1;
+    border-top-right-radius: 15px 15px;
+    border-top-left-radius: 15px 15px;
+    border-bottom-right-radius: 15px 15px;
+    border-bottom-left-radius: 15px 15px;
+    margin-top: 2em;
+}
+
+.myDialogTopBar
+{
+    width: 100%;
+    font-weight: bold;
+    height: fit-content;
+    /* background-color: rgb(231, 231, 231); */
+    border-top-right-radius: 15px 15px;
+    border-top-left-radius: 15px 15px;
+    font-size: 1.2em;
+}
+
+.dialogTitle
+{
+    padding: 0.5em;
+    
+}
+
+.closeDialog
+{
+    /* background-color: red; */
+    border-top-right-radius: 15px 15px;
+    padding: 0.5em 0.75em 0.5em 0.75em;
+    /* background-color: red; */
+}
+
+.dialogContent
+{
+    padding: 1em 1em 1em 1em;
+    font-weight: bold;
+    font-size: 1em;
+}
+
+.rightPanelTitle
+{
+    font-weight: bold;
+    margin: 0.5em 0 0.5em 0;
+    font-size: 1.5em;
 }

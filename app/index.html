@@ -1,46 +1,153 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title>Hello World!</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
-    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="node_modules/@fontsource/kanit/200.css">
-    <link rel="stylesheet" href="node_modules/bootstrap-icons/font/bootstrap-icons.min.css">
-</head>
-<body class="d-flex flex-column">
-    <div class="container-fluid topBar w-100">
-        <div class="row align-items-center">
-            <div class="col-4 topBarSections"></div>
-            <div class="col-4 topBarSections appTitle">TempPress App</div>
-            <div class="col-4 topBarSections windowButtons d-flex flex-row-reverse">
-                <i class="bi bi-x-lg closeApp"></i>
-                <!-- <i class="bi bi-arrows-fullscreen maximizeApp"></i> -->
-                <i class="bi bi-dash-lg minimalizeApp"></i>
-            </div>
-        </div>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+        <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="node_modules/@fontsource/kanit/200.css">
+        <link rel="stylesheet" href="node_modules/bootstrap-icons/font/bootstrap-icons.min.css">  
+    </head>
+
+    <body class="container-fluid m-0 p-0">
         
-    </div>
-        
-    
-    <div class="mainContent">
-        <div class="d-flex flex-column chooseDeviceContent">
-            <div class="chooseDeviceTitle">Devices</div>
-            <div class="chooseDeviceSubpanel d-flex flex-row">
-                <div class="devicesList"></div>
-                <div class="rightPanel d-flex flex-column">
-                    <button class="chooseDeviceButton connectButton">Connect</button>
-                    <button class="chooseDeviceButton aboutButton">About</button>
-                    <div class="themeButtons d-flex flex-row h-100">
-                        <i class="lightModeButton bi bi-brightness-high"></i>
-                        <i class="darkModeButton bi bi-moon-stars"></i>
-                    </div>
+        <div class="topBar container-fluid w-100">
+            <div class="row align-items-center">
+                <div class="topBarSections col-4 p-0"></div>
+                <div class="topBarSections appTitle col-4 p-0">TempPress App</div>
+                <div class="topBarSections windowButtons col-4 d-flex flex-row-reverse p-0">
+                    <i class="bi bi-x-lg closeAppBtn"></i>
+                    <i class="bi bi-dash-lg minimalizeAppBtn"></i>
                 </div>
             </div>
         </div>
-    </div>
-    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
-</body>
+            
+        <div class="mainContent position-relative">
+            
+            <div class="devicePanel h-100 position-relative" style="display: none">
+                <div class="chooseDeviceTitle">Device panel</div>
+                <div class="d-flex flex-column dataPanel">
+                    <div class="alert alert-danger idDevice">ID: TempPress Sensor V1</div>
+                    <div class="d-flex flex-row">
+                        <div class="d-flex flex-column temperature alert alert-primary" >
+                            <p class="measTitle">Temperature</p>
+                            <p class="measValue">23.23 &deg;C</p>
+                        </div>
+                        <div class="d-flex flex-column pressure alert alert-success">
+                            <p class="measTitle">Pressure</p>
+                            <p class="measValue">1240.23 hPa</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chooseDeviceContent flex-column h-100 position-relative">
+                <div class="chooseDeviceTitle">Devices</div>
+                <div class="chooseDeviceSubpanel d-flex flex-row">
+                    
+                    <div class="devicesList d-flex flex-column">
+                        <div class="subDevicesList h-100 w-100"></div>
+                    </div>
+                
+                    <div class="rightPanel d-flex flex-column">
+                        <button class="chooseDeviceButton connectButton">Connect</button>
+                        <button class="chooseDeviceButton aboutButton">About</button>
+                        <p class="p-0 rightPanelTitle">Theme</p>
+                        <div class="themeButtons d-flex flex-row h-100 mt-0">
+                            <i class="lightModeButton bi bi-brightness-high"></i>
+                            <i class="darkModeButton bi bi-moon-stars"></i>
+                        </div>
+                        <p class="p-0 rightPanelTitle">Language</p>
+                        <div class="themeButtons d-flex flex-row h-100 mt-0">
+                            <p class="m-0 lightModeButton">PL</p>
+                            <p class="m-0 darkModeButton">ENG</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="myDialogBack position-absolute top-0 start-0 w-100 h-100"></div>
+                
+            <div class="myDialog position-absolute top-0 start-50 translate-middle-x" id="aboutDialog">
+                <div class="d-flex flex-column">
+                    <div class="container-fluid m-0 p-0 myDialogTopBar">
+                        <div class="row m-0 p-0 justify-content-center">
+                            <div class="col-1"></div>
+                            <div class="col-10 text-center dialogTitle">About the programme</div>
+                            <div class="col-1 d-flex flex-row-reverse m-0 p-0">
+                                <i class="bi bi-x-lg m-0 closeDialog"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column dialogContent">
+                        <p class="m-0 p-0">Title: TempPress App</p>
+                        <p class="m-0 p-0">Author: Karol Ambroziński</p>
+                        <p class="m-0 p-0">Font: Kanit</p>
+                        <p class="m-0 p-0">Used tools:</p>
+                        <ul>
+                            <li>Bootstrap</li>
+                            <li>serialport</li>
+                            <li>Bootstrap Icons</li>
+                            <li>JQuery</li>
+                            <li>JQuery UI</li>
+                            <li>String-Format</li>
+                          </ul> 
+                    </div>
+                </div>    
+            </div>
+
+            <div class="myDialog position-absolute top-0 start-50 translate-middle-x" id="connectingDialog">
+                <div class="d-flex flex-column">
+                    <div class="d-flex flex-column dialogContent">
+                        <p class="m-0 p-0">Connecting...</p>
+                    </div>
+                </div>    
+            </div>
+            
+            <div class="myDialog position-absolute top-0 start-50 translate-middle-x" id="notMarkDeviceDialog">
+                <div class="d-flex flex-column">
+                    <div class="container-fluid m-0 p-0 myDialogTopBar">
+                        <div class="row m-0 p-0 justify-content-center">
+                            <div class="col-1"></div>
+                            <div class="col-10 text-center dialogTitle">Error</div>
+                            <div class="col-1 d-flex flex-row-reverse m-0 p-0">
+                                <i class="bi bi-x-lg m-0 closeDialog"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column dialogContent">
+                        <p class="m-0 p-0">The device wasn't choosen</p>
+                    </div>
+                </div>    
+            </div>
+
+            <div class="myDialog position-absolute top-0 start-50 translate-middle-x" id="cannotConnectDialog">
+                <div class="d-flex flex-column">
+                    <div class="container-fluid m-0 p-0 myDialogTopBar">
+                        <div class="row m-0 p-0 justify-content-center">
+                            <div class="col-1"></div>
+                            <div class="col-10 text-center dialogTitle">Error</div>
+                            <div class="col-1 d-flex flex-row-reverse m-0 p-0">
+                                <i class="bi bi-x-lg m-0 closeDialog"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column dialogContent">
+                        <p class="m-0 p-0">Can't connect to the device</p>
+                    </div>
+                </div>    
+            </div>
+        </div>
+
+        <script src="node_modules/string-format/index.js"></script>
+        <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
+        <script type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="node_modules/jquery-ui/dist/jquery-ui.min.js"></script>
+
+        <script type="text/javascript" src="myDialog.js"></script>
+        <script src="renderer.js"></script>
+    
+    </body>
 </html>
