@@ -9,7 +9,8 @@ function createWindow ()
         width: 800,
         // minHeight: 500,
         // resizable: false,
-        height: 600,
+        height: 650,
+        maximizable: false,
         transparent: true,
         frame: false,
         webPreferences: 
