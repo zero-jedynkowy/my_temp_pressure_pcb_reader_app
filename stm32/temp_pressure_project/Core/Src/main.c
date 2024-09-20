@@ -1,17 +1,14 @@
 /* USER CODE BEGIN Header */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
-
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
 #include "bmp3.h"
 #include "common.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "cJSON.h"
-
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -34,8 +31,6 @@ TIM_HandleTypeDef htim3;
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
-
-//KOD BOSHA
 int8_t rslt;
 uint16_t settings_sel;
 
@@ -44,7 +39,21 @@ struct bmp3_data data = { 0 };
 struct bmp3_settings settings = { 0 };
 struct bmp3_status status = { { 0 } };
 
-//MOJ KOD
+uint8_t measurement_mode = 0;
+
+double press_min = 70000;
+double press_step = 10000;
+double temp_min = 0;
+double temp_step = 10;
+double temp = 0;
+uint16_t ccr = 0;
+uint16_t prescaler = 0;
+uint16_t counterPeriod = 0;
+
+char rx[50] = {0};
+char tx[50] = {0};
+uint8_t bufferCounter = 0;
+
 enum
 {
 	TRANSMIT,
@@ -52,35 +61,35 @@ enum
 	PROCESS_RECEIVED_DATA
 } typedef DeviceState;
 
-uint8_t measurement_mode = 0;
-double press_min = 70000;
-double press_step = 10000;
-double temp_min = 0;
-double temp_step = 10;
-double temp = 0;
-char rx[50] = {0};
-char tx[50] = {0};
-uint8_t bufferCounter = 0;
-DeviceState state;
+enum
+{
+	INT_TYPE,
+	DOUBLE_TYPE
+} typedef VarType;
 
-uint16_t ccr = 0;
-uint16_t prescaler = 0;
-uint16_t counterPeriod = 0;
+DeviceState state = MEASUREMENT;
 
+void changeSettings(cJSON * root, char * key, void * varAddr, VarType varType)
+{
+	cJSON *keyObj = cJSON_GetObjectItemCaseSensitive(root, key);
+	if(keyObj != NULL)
+	{
+		switch(varType)
+		{
+			case INT_TYPE:
+			{
+				*((uint16_t *)varAddr) = keyObj->valueint;
+				break;
+			}
+			case DOUBLE_TYPE:
+			{
+				*((double *)varAddr) = keyObj->valuedouble;
+				break;
+			}
+		}
+	}
+}
 
-/* USER CODE END PV */
-
-/* Private function prototypes -----------------------------------------------*/
-void SystemClock_Config(void);
-static void MX_GPIO_Init(void);
-static void MX_USART1_UART_Init(void);
-static void MX_TIM3_Init(void);
-static void MX_I2C1_Init(void);
-/* USER CODE BEGIN PFP */
-/* USER CODE END PFP */
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
 void bmp3_set_measurement_leds(double * measurement, double * min, double * step)
 {
 	double temp = *measurement - *min;
@@ -115,6 +124,19 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         HAL_UART_Receive_IT(&huart1, (uint8_t *)&rx[bufferCounter], 1);
     }
 }
+/* USER CODE END PV */
+
+/* Private function prototypes -----------------------------------------------*/
+void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+static void MX_USART1_UART_Init(void);
+static void MX_TIM3_Init(void);
+static void MX_I2C1_Init(void);
+/* USER CODE BEGIN PFP */
+/* USER CODE END PFP */
+
+/* Private user code ---------------------------------------------------------*/
+/* USER CODE BEGIN 0 */
 /* USER CODE END 0 */
 
 /**
@@ -147,10 +169,13 @@ int main(void)
   MX_TIM3_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
+
   rslt = bmp3_interface_init(&dev, BMP3_I2C_INTF);
   bmp3_check_rslt("bmp3_interface_init", rslt);
+
   rslt = bmp3_init(&dev);
   bmp3_check_rslt("bmp3_init", rslt);
+
   settings.int_settings.drdy_en = BMP3_ENABLE;
   settings.press_en = BMP3_ENABLE;
   settings.temp_en = BMP3_ENABLE;
@@ -158,27 +183,30 @@ int main(void)
   settings.odr_filter.temp_os = BMP3_OVERSAMPLING_2X;
   settings.odr_filter.odr = BMP3_ODR_100_HZ;
   settings_sel = BMP3_SEL_PRESS_EN | BMP3_SEL_TEMP_EN | BMP3_SEL_PRESS_OS | BMP3_SEL_TEMP_OS | BMP3_SEL_ODR | BMP3_SEL_DRDY_EN;
+
   rslt = bmp3_set_sensor_settings(settings_sel, &settings, &dev);
   bmp3_check_rslt("bmp3_set_sensor_settings", rslt);
+
   settings.op_mode = BMP3_MODE_NORMAL;
+
   rslt = bmp3_set_op_mode(&settings, &dev);
   bmp3_check_rslt("bmp3_set_op_mode", rslt);
 
   measurement_mode = HAL_GPIO_ReadPin(MEASUREMENT_MODE_GPIO_Port, MEASUREMENT_MODE_Pin);
+
   HAL_UART_Receive_IT(&huart1, (uint8_t *)rx, 1);
   state = MEASUREMENT;
 
   HAL_TIM_Base_Start_IT(&htim3);
-
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
+
+	htim3.Instance->PSC = 42000;
+	htim3.Instance->ARR = 1000;
+	htim3.Instance->CCR2 = 500;
 
   ccr = htim3.Instance->CCR2;
   prescaler = htim3.Instance->PSC;
   counterPeriod = htim3.Instance->ARR;
-//  counterPeriod = htim3.Instance
-//  prescaler = htim3.Init.Prescaler;
-//  prescaler = htim3.Init.
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -190,10 +218,12 @@ int main(void)
 			case TRANSMIT:
 			{
 				cJSON *root = cJSON_CreateObject();
+
 				ccr = htim3.Instance->CCR2;
 				prescaler = htim3.Instance->PSC;
 				counterPeriod = htim3.Instance->ARR;
-				cJSON_AddStringToObject(root, "id", "TempPress Sensor V1");
+
+				cJSON_AddStringToObject(root, "id", "TempPress Sensor");
 				cJSON_AddNumberToObject(root, "temperature", data.temperature);
 				cJSON_AddNumberToObject(root, "pressure", data.pressure);
 				cJSON_AddNumberToObject(root, "temp_step", temp_step);
@@ -203,21 +233,28 @@ int main(void)
 				cJSON_AddNumberToObject(root, "prescaler", prescaler);
 				cJSON_AddNumberToObject(root, "counterPeriod", counterPeriod);
 				cJSON_AddNumberToObject(root, "ccr", ccr);
+
 				char *json_string = cJSON_Print(root);
+
 				HAL_UART_Transmit(&huart1, (uint8_t *)json_string, strlen(json_string), HAL_MAX_DELAY);
+
 				cJSON_Delete(root);
 				free(json_string);
+
 				state = MEASUREMENT;
 				break;
 			}
 			case MEASUREMENT:
 			{
 				rslt = bmp3_get_status(&status, &dev);
+
 				bmp3_check_rslt("bmp3_get_status", rslt);
+
 				if (status.intr.drdy != BMP3_ENABLE && rslt == BMP3_OK)
 				{
 					rslt = bmp3_get_sensor_data(BMP3_PRESS_TEMP, &data, &dev);
 					measurement_mode = HAL_GPIO_ReadPin(MEASUREMENT_MODE_GPIO_Port, MEASUREMENT_MODE_Pin);
+
 					if(measurement_mode == 0)
 					{
 						bmp3_set_measurement_leds(&data.temperature, &temp_min, &temp_step);
@@ -227,79 +264,35 @@ int main(void)
 						bmp3_set_measurement_leds(&data.pressure, &press_min, &press_step);
 					}
 				}
+
 				ccr = htim3.Instance->CCR2;
 				prescaler = htim3.Instance->PSC;
 				counterPeriod = htim3.Instance->ARR;
+
 				break;
 			}
 			case PROCESS_RECEIVED_DATA:
 			{
-			    cJSON *root = cJSON_Parse(rx);
-			    cJSON *command = cJSON_GetObjectItemCaseSensitive(root, "command");
-			    if(strcmp(command->valuestring, "get_data") == 0)
-			    {
-			    	state = TRANSMIT;
-			    }
-			    else if(strcmp(command->valuestring, "press_min") == 0)
-			    {
-			    	cJSON *value = cJSON_GetObjectItemCaseSensitive(root, "value");
-			    	press_min = value->valuedouble;
-			    	state = TRANSMIT;
-			    }
-			    else if(strcmp(command->valuestring, "press_step") == 0)
-			    {
-			    	cJSON *value = cJSON_GetObjectItemCaseSensitive(root, "value");
-			    	press_step = value->valuedouble;
-			    	state = TRANSMIT;
-			    }
-			    else if(strcmp(command->valuestring, "temp_min") == 0)
-				{
-			    	cJSON *value = cJSON_GetObjectItemCaseSensitive(root, "value");
-			    	temp_min = value->valuedouble;
-					state = TRANSMIT;
-				}
-				else if(strcmp(command->valuestring, "temp_step") == 0)
-				{
-					cJSON *value = cJSON_GetObjectItemCaseSensitive(root, "value");
-					temp_step = value->valuedouble;
-					state = TRANSMIT;
-				}
-				else if(strcmp(command->valuestring, "ccr") == 0)
-				{
-					cJSON *value = cJSON_GetObjectItemCaseSensitive(root, "value");
-				    HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_2);
-					__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, value->valueint);
-					__HAL_TIM_SET_COUNTER(&htim3, 0);
-					HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
-					state = TRANSMIT;
-				}
-				else if(strcmp(command->valuestring, "prescaler") == 0)
-				{
-					cJSON *value = cJSON_GetObjectItemCaseSensitive(root, "value");
-					HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_2);
-					__HAL_TIM_SET_PRESCALER(&htim3, value->valueint);
-					__HAL_TIM_SET_COUNTER(&htim3, 0);
-					HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
-					state = TRANSMIT;
-				}
-				else if(strcmp(command->valuestring, "counterPeriod") == 0)
-				{
-					cJSON *value = cJSON_GetObjectItemCaseSensitive(root, "value");
-					HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_2);
-					htim3.Instance->ARR = value->valueint;
-//					__HAL_TIM_SET_COUNTER(&htim3, value->valueint);
-					__HAL_TIM_SET_COUNTER(&htim3, 0);
-					HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
-					state = TRANSMIT;
-				}
-				else
-				{
-					state = MEASUREMENT;
-				}
-			    memset(rx, 0, sizeof(rx));
-			    cJSON_Delete(root);
+				cJSON *root = cJSON_Parse(rx);
+
+				changeSettings(root, "temp_min", &temp_min, DOUBLE_TYPE);
+				changeSettings(root, "temp_step", &temp_step, DOUBLE_TYPE);
+				changeSettings(root, "press_min", &press_min, DOUBLE_TYPE);
+				changeSettings(root, "press_step", &press_step, DOUBLE_TYPE);
+				changeSettings(root, "prescaler", &htim3.Instance->PSC, INT_TYPE);
+				changeSettings(root, "counterPeriod", &htim3.Instance->ARR, INT_TYPE);
+				changeSettings(root, "ccr", &htim3.Instance->CCR2, INT_TYPE);
+
+
+
+
+
+				memset(rx, 0, sizeof(rx));
+				cJSON_Delete(root);
+				state = TRANSMIT;
 				break;
 			}
+
 		}
 	}
     /* USER CODE END WHILE */

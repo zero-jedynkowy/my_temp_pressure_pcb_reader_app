@@ -4,6 +4,7 @@
 {
     font-family: "Kanit";
     font-weight: bold;
+    user-select: none;
 }
 
 button, input[type=button] 
@@ -109,7 +110,7 @@ html, body
 {
     min-width: 400px;
     background-color: white;
-    min-height: 100px;
+    min-height: 50px;
     border-radius: 15px;
     position: fixed;
     margin-top: 100px;
@@ -126,7 +127,8 @@ html, body
 
 .dialogContent
 {
-    padding: 0 20px 20px 20px;
+    /* padding: 0 20px 20px 20px; */
+    padding: 20px;
 }
 
 .dialogCloseButton
@@ -250,7 +252,7 @@ html, body
     color: white;
 }
 
-.noMarked
+.switch
 {
     background-color: #bcbcbc;
     color: black;
@@ -260,6 +262,7 @@ html, body
 {
     padding: 15px;
     border-bottom: 3px solid black;
+    display: none;
 }
 
 .deviceTitle
@@ -272,10 +275,10 @@ html, body
     font-size: 15px;
 }
 
-.device:last-child
+/* .device:last-child
 {
     border-bottom: 0;
-}
+} */
 
 /* DEVICE PANEL */
 .devicePanelTitle
@@ -287,14 +290,57 @@ html, body
 
 .deviceID
 {
-    width: 100%;
     background-color: #00b56d;
-    color: black;
-    /* opacity: 0.7; */
-    padding: 15px;
     font-size: 25px;
+    color: black;
+    padding: 15px;
     border-radius: 15px;
-    /* border: 2px solid #002f1c; */
+    margin-right: 15px;
+    width: 100%;
+    /* width: 100%;
+    height: fit-content; */
+}
+
+.deviceUpdate
+{
+    /* font-size: 30px;  */
+    padding: 10px 30px 10px 30px;
+    /* width: fit-content; */
+    /* padding: 20px; */
+    margin-right: 15px;
+    border-radius: 15px;
+    background-color: #1ac84b;
+    color: black;
+}
+
+.deviceUpdateTurnedOn
+{
+    background-color: #2f2f2f;
+    color: #ffffff;
+}
+
+.deviceUpdate > i 
+{
+    margin: 0 10px 0 0;
+    padding: 0;
+}
+
+.deviceUpdate::before
+{
+    padding: 0;
+    margin: 0;
+}
+
+.disconnectButton
+{
+    background-color: #b60058;
+    font-size: 25px;
+    color: white;
+    padding: 15px;
+    border-radius: 15px;
+    min-width: 150px;
+    text-align: center;
+    cursor: pointer;
 }
 
 .measurementsPanel
@@ -350,7 +396,7 @@ html, body
     border-radius: 15px;
     color: white;
     margin-top: 15px;
-    margin-bottom: 90px;
+    margin-bottom: 15px;
     padding: 20px;
 }
 
@@ -484,15 +530,72 @@ html, body
     background-color: #525252;
 }  
 
-.disconnectButton
+
+
+
+
+
+.diodesPanel
 {
-    margin: 0 35px 20px 0;
-    font-size: 20px;
+    background-color: rgb(110, 0, 48);
+    border-radius: 15px;
     color: white;
-    padding: 10px;
-    border-radius: 10px;
-    background-color: #b60058;
-    border: 3px solid black;
-    /* background-color: blueviolet; */
-    /* border: 0; */
+    /* margin-top: 15px; */
+    margin-bottom: 40px;
+    padding: 20px;
+}
+
+.diodesPanelTitle
+{
+    font-size: 25px;
+}
+
+.diodesContent > div 
+{
+    width: 50%;
+}
+
+.diodesSettings
+{
+    margin-right: 15px;
+}
+
+.diodesSettings > p, .diodesCurrentState > p
+{
+    padding: 0;
+    margin: 0;
+}
+
+
+
+.diodesSettings > p:nth-of-type(1)
+{
+    font-size: 20px;
+}
+
+.diodesSettings > p:nth-of-type(2), .diodesSettings > p:nth-of-type(4)
+{
+    font-size: 40px;
+}
+
+.diodesSettings > p:nth-of-type(3)
+{
+    margin-top: 15px;
+    font-size: 20px;
+}
+
+.diodesCurrentState > p:nth-of-type(1)
+{
+    font-size: 20px;
+}
+
+.diodesCurrentState > p:nth-of-type(2)
+{
+    font-size: 40px;
+}
+
+.diodesSettings > input, .diodesCurrentState > input
+{
+    width: 100%;
+    margin: 0;
 }
