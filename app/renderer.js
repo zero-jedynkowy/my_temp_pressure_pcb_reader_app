@@ -73,7 +73,7 @@ function updateUI()
     document.querySelector('.pressValue').innerHTML = format('{} hPa', (deviceManager.lastReceivedData.pressure/100).toFixed(2))
     document.querySelector('.freqHolder').innerHTML = format('{} Hz', Math.floor(calcFreq(deviceManager.lastReceivedData.counterPeriod, deviceManager.lastReceivedData.prescaler)))
     document.querySelector('.dutyHolder').innerHTML = format('{} %', Math.floor(calcDuty(deviceManager.lastReceivedData.ccr, deviceManager.lastReceivedData.counterPeriod)))
-    document.querySelector('.deviceUpdate').classList.toggle('deviceUpdateTurnedOn')
+    // document.querySelector('.deviceUpdate').classList.toggle('deviceUpdateTurnedOn')
     // document.querySelector('.pwmFreqSlider').value = calcFreq(deviceManager.lastReceivedData.counterPeriod, deviceManager.lastReceivedData.prescaler)
     // document.querySelector('.pwmDutySlider').value = calcDuty(deviceManager.lastReceivedData.ccr, deviceManager.lastReceivedData.counterPeriod)
     document.querySelector('.tempMinHolder').innerHTML = format('{} {}C', deviceManager.lastReceivedData.temp_min, String.fromCharCode(0x00B0))
@@ -220,14 +220,14 @@ function markDevice(event)
     if($(event.currentTarget).hasClass('markedDevice'))
     {
         $(event.currentTarget).removeClass('markedDevice')
-        $(event.currentTarget).animate({backgroundColor: 'white'}, 250)
+        // $(event.currentTarget).animate({backgroundColor: 'white'}, 250)
     }
     else
     {
         $('.markedDevice').animate({backgroundColor: 'white'})
         $('.device').removeClass('markedDevice')
         $(event.currentTarget).addClass('markedDevice')
-        $(event.currentTarget).animate({backgroundColor: 'rgb(155, 155, 155)'}, 250)
+        // $(event.currentTarget).animate({backgroundColor: 'rgb(155, 155, 155)'}, 250)
     }
 }
 
