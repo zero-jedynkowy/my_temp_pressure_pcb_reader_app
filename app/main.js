@@ -26,7 +26,7 @@ function createWindow ()
     win.loadFile('index.html')
     win.settings = settings
     win.nativeTheme = nativeTheme
-    // win.webContents.openDevTools();
+    win.webContents.openDevTools();
 }
 
 app.whenReady().then(() => 

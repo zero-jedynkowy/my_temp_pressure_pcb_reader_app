@@ -48,8 +48,6 @@
                 </div>
 
                 <div class="dialog connectingDialog position-absolute top-0 start-50 translate-middle-x">
-                    <!-- <div class="dialogTitle">O programie</div> -->
-                    <!-- <i class="dialogCloseButton position-absolute top-0 end-0 bi bi-x-lg"></i> -->
                     <div class="dialogContent">
                         <p class="p-0 m-0 lang">Łączenie z urządzeniem...</p>
                     </div>
@@ -86,7 +84,6 @@
                             <div class="devicesListContent">
                                 <!-- <div class="device">
                                     <div class="deviceTitle">/dev/ttyUSB0</div>
-                                    <div class="deviceSubtitle">Producent: Microsoft</div>
                                 </div> -->
                             </div>
                         </div>
@@ -104,14 +101,6 @@
                                 <button class="themeBtn light lang">Jasny</button>
                                 <button class="themeBtn dark lang">Ciemny</button>
                             </div>
-                            <!-- <div class="switch d-flex flex-row">
-                                <button class="marked firstSwitch bi bi-brightness-high lightSwitch"></button>
-                                <button class="noMarked secondSwitch bi bi-moon-stars darkSwitch"></button>
-                            </div>
-                            <div class="switch d-flex flex-row">
-                                <button class="marked firstSwitch plSwitch">PL</button>
-                                <button class="noMarked secondSwitch engSwitch">ENG</button>
-                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -121,7 +110,6 @@
                     <div class="d-flex flex-column">
                         <div class="d-flex flex-row">
                             <div class="deviceID">TempPress Sensor</div>
-                            <!-- <div class="deviceUpdate"></div> -->
                             <div class="disconnectButton lang">Rozłącz się</div>
                         </div>
                         
@@ -143,19 +131,11 @@
                                     <p class="lang">Częstotliwość</p>
                                     <p class="freqHolder">23000 kHz</p>
                                     <input type="range" min="1" max="100" value="1" class="slider pwmFreqSlider">
-                                    <!-- <div class="d-flex flex-row pwmEnterValue">
-                                        <input id="number" type="number" value="42" class="pwmFreqInput"/>
-                                        <button class="bi bi-arrow-90deg-left pwmFreqButton"></button>
-                                    </div> -->
                                 </div>
                                 <div class="pwmCurrentState">
                                     <p class="lang">Wypełnienie</p>
                                     <p class="dutyHolder">50 %</p>
                                     <input type="range" min="0" max="100" value="50" class="slider pwmDutySlider">
-                                    <!-- <div class="d-flex flex-row pwmEnterValue">
-                                        <input id="number" type="number" value="42" />
-                                        <button class="bi bi-arrow-90deg-left pwmDutyButton"></button>
-                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -167,40 +147,22 @@
                                     <p class="lang">Minimum temperatury</p>
                                     <p class="tempMinHolder">20 &deg;C</p>
                                     <input type="range" min="-40" max="40" value="1" class="slider minTempSlider">
-                                    <!-- <div class="d-flex flex-row pwmEnterValue">
-                                        <input id="number" type="number" value="42" class="minTempInput"/>
-                                        <button class="bi bi-arrow-90deg-left minTempButton"></button>
-                                    </div> -->
                                     <p class="lang">Krok zmiany temperatury</p>
                                     <p class="tempStepHolder">20 &deg;C</p>
                                     <input type="range" min="1" max="20" value="1" class="slider stepTempSlider">
-                                    <!-- <div class="d-flex flex-row pwmEnterValue">
-                                        <input id="number" type="number" value="42" class="stepTempInput"/>
-                                        <button class="bi bi-arrow-90deg-left stepTempButton"></button>
-                                    </div> -->
                                 </div>
                                 <div class="diodesSettings">
                                     <p class="lang">Minimum cisnienia</p>
                                     <p class="pressMinHolder">500 hPa</p>
                                     <input type="range" min="100" max="1200" value="100" class="slider minPressSlider">
-                                    <!-- <div class="d-flex flex-row pwmEnterValue">
-                                        <input id="number" type="number" value="42" />
-                                        <button class="bi bi-arrow-90deg-left minPressButton"></button>
-                                    </div> -->
                                     <p class="lang">Krok zmiany ciśnienia</p>
                                     <p class="pressStepHolder">500 hPa</p>
                                     <input type="range" min="1" max="500" value="50" class="slider stepPressSlider">
-                                    <!-- <div class="d-flex flex-row pwmEnterValue">
-                                        <input id="number" type="number" value="42" class="stepPressInput"/>
-                                        <button class="bi bi-arrow-90deg-left stepTempButton"></button>
-                                    </div> -->
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- <button class="disconnectButton position-absolute bottom-0 end-0">Rozłącz się</button> -->
                 </div>
-                
             </div>
             
         </div>

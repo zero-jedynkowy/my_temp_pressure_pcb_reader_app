@@ -23,30 +23,23 @@ const path = require('path');
 let deviceElement = `
     <div class="device" data-device="{}">
         <div class="deviceTitle">{}</div>
-        <div class="deviceSubtitle">Producent: {}</div>
+        <div class="d-none deviceSubtitle">Producent: {}</div>
     </div>
 `
 
 async function loadSettings()
 {
     let temp = null
-    try
+    temp = await settings.get('theme')
+    if(temp == undefined)
     {
-        temp = await settings.get('theme');
-    }
-    catch(error)
-    {
-        settings.set("theme", "system");
         temp = 'system'
     }
     changeSettings({target:document.querySelector('.themeBtn.'+temp)})
-    try
+
+    temp = await settings.get('language')
+    if(temp == undefined)
     {
-        temp = await settings.get('language');
-    }
-    catch(error)
-    {
-        settings.set("language", "eng");
         temp = 'eng'
     }
     changeSettings({target:document.querySelector('.langBtn.'+temp)})
@@ -181,17 +174,20 @@ function updateUI()
     document.querySelector('.pressValue').innerHTML = format('{} hPa', (deviceManager.lastReceivedData.pressure/100).toFixed(2))
     document.querySelector('.freqHolder').innerHTML = format('{} Hz', Math.floor(calcFreq(deviceManager.lastReceivedData.counterPeriod, deviceManager.lastReceivedData.prescaler)))
     document.querySelector('.dutyHolder').innerHTML = format('{} %', Math.floor(calcDuty(deviceManager.lastReceivedData.ccr, deviceManager.lastReceivedData.counterPeriod)))
-    // document.querySelector('.deviceUpdate').classList.toggle('deviceUpdateTurnedOn')
-    // document.querySelector('.pwmFreqSlider').value = calcFreq(deviceManager.lastReceivedData.counterPeriod, deviceManager.lastReceivedData.prescaler)
-    // document.querySelector('.pwmDutySlider').value = calcDuty(deviceManager.lastReceivedData.ccr, deviceManager.lastReceivedData.counterPeriod)
     document.querySelector('.tempMinHolder').innerHTML = format('{} {}C', deviceManager.lastReceivedData.temp_min, String.fromCharCode(0x00B0))
     document.querySelector('.tempStepHolder').innerHTML = format('{} {}C', deviceManager.lastReceivedData.temp_step, String.fromCharCode(0x00B0))
-    // document.querySelector('.minTempSlider').value = deviceManager.lastReceivedData.temp_min
-    // document.querySelector('.stepTempSlider').value = deviceManager.lastReceivedData.temp_step
     document.querySelector('.pressMinHolder').innerHTML = format('{} hPa', deviceManager.lastReceivedData.press_min/100)
     document.querySelector('.pressStepHolder').innerHTML = format('{} hPa', deviceManager.lastReceivedData.press_step/100)
-    // document.querySelector('.minPressSlider').value = deviceManager.lastReceivedData.press_min/100
-    // document.querySelector('.stepPressSlider').value = deviceManager.lastReceivedData.press_step/100
+}
+
+function updateUISliders()
+{
+    document.querySelector('.pwmFreqSlider').value = Math.floor(calcFreq(deviceManager.lastReceivedData.counterPeriod, deviceManager.lastReceivedData.prescaler))
+    document.querySelector('.pwmDutySlider').value = Math.floor(calcDuty(deviceManager.lastReceivedData.ccr, deviceManager.lastReceivedData.counterPeriod))
+    document.querySelector('.minTempSlider').value = deviceManager.lastReceivedData.temp_min
+    document.querySelector('.stepTempSlider').value = deviceManager.lastReceivedData.temp_step
+    document.querySelector('.minPressSlider').value = deviceManager.lastReceivedData.press_min/100
+    document.querySelector('.stepPressSlider').value = deviceManager.lastReceivedData.press_step/100
 }
 
 function exchangeData(data)
@@ -208,21 +204,24 @@ function exchangeData(data)
                 deviceManager.lastReceivedData = data
    
                 updateUI()
+                updateUISliders()
                 $('.connectingDialog').fadeOut(250).promise().done(() => 
                 {
                     $('.dialogBackground').fadeOut(250).promise().done(() => 
                     {
                         $('.devicesList').fadeOut(250).promise().done(() => {
                             $('.devicePanel').fadeIn(500)
+                            myIntervalIntervalFun = disconnect
+                            myInterval = setInterval(countdownForDisconecting, 100)
                         })
                     })
                 })
             }
             else disconnect()
         }
-        case 1: //ONGOING COMMUNCATION
+        case 1: //ONGOING COMMUNICATION
         {
-            let newObj = {}
+            myIntervalCounter = 0
             Object.entries(deviceManager.tempNewSettings).forEach(element => 
             {
                 if(deviceManager.tempNewSettings[element[0]] == deviceManager.lastReceivedData[element[0]])
@@ -236,6 +235,7 @@ function exchangeData(data)
         }
     }
 }
+
 
 let myInterval = null
 let myIntervalCounter = 0
@@ -307,6 +307,8 @@ function connect()
 
 function disconnect()
 {
+    clearInterval(myInterval)
+    myIntervalCounter = 0
     deviceManager.port.close()
     deviceManager.port = null
     deviceManager.exchangeDataStatus = 0
@@ -343,9 +345,11 @@ async function refreshDevicesList()
 {
     let currentDevices = (await SerialPort.list()).map((e) => 
     {
-        let temp = 'None'
-        if(e.manufacturer != null) temp = e.manufacturer   
-        return [e.path, temp]
+        // IN COMMENTS THERE IS A FILTERING THE DEVICES
+        // let temp = 'None'
+        // if(e.manufacturer != null) temp = e.manufacturer   
+        // return [e.path, temp]
+        return [e.path, '']
     })
 
     currentDevices = currentDevices.filter((e) => {if(e[1] != 'None') return e})
