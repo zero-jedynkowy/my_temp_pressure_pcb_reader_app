@@ -1,4 +1,5 @@
-const {app, BrowserWindow} = require('electron/main')
+const {app, BrowserWindow, nativeTheme} = require('electron/main')
+const settings = require('electron-settings')
 
 require('@electron/remote/main').initialize()
 
@@ -23,7 +24,9 @@ function createWindow ()
     
     require('@electron/remote/main').enable(win.webContents)
     win.loadFile('index.html')
-    win.webContents.openDevTools();
+    win.settings = settings
+    win.nativeTheme = nativeTheme
+    // win.webContents.openDevTools();
 }
 
 app.whenReady().then(() => 

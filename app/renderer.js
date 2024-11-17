@@ -1,7 +1,24 @@
 const { SerialPort } = require('serialport')
 const { DelimiterParser } = require('@serialport/parser-delimiter')
 const format = require('string-format')
-const { BrowserWindow, dialog} = require('@electron/remote')
+const { BrowserWindow} = require('@electron/remote')
+const settings = BrowserWindow.getFocusedWindow().settings
+const fs = require('fs');
+const path = require('path');
+
+// EXCHANGED DATA BETWEEN PC AND DEVICE
+// {
+//     id: 0,
+//     temp: 0,
+//     press: 0
+//     temp_min: 0,
+//     temp_step: 0,
+//     press_min: 0,
+//     press_step: 0,
+//     prescaler: 0,
+//     counterPeriod: 0,
+//     ccr: 0
+// }
 
 let deviceElement = `
     <div class="device" data-device="{}">
@@ -9,6 +26,97 @@ let deviceElement = `
         <div class="deviceSubtitle">Producent: {}</div>
     </div>
 `
+
+async function loadSettings()
+{
+    let temp = null
+    try
+    {
+        temp = await settings.get('theme');
+    }
+    catch(error)
+    {
+        settings.set("theme", "system");
+        temp = 'system'
+    }
+    changeSettings({target:document.querySelector('.themeBtn.'+temp)})
+    try
+    {
+        temp = await settings.get('language');
+    }
+    catch(error)
+    {
+        settings.set("language", "eng");
+        temp = 'eng'
+    }
+    changeSettings({target:document.querySelector('.langBtn.'+temp)})
+}
+
+function changeSettings(source)
+{
+    let temp = Array.from(source.target.classList)
+    if(temp.includes('themeBtn'))
+    {
+        if(!temp.includes('rightMenuBtnMarked'))
+        {
+            if(temp.includes('system'))
+            {
+                BrowserWindow.getFocusedWindow().nativeTheme.themeSource = 'system'
+                settings.set("theme", "system");
+            }
+            else if(temp.includes('light'))
+            {
+                BrowserWindow.getFocusedWindow().nativeTheme.themeSource = 'light'
+                settings.set("theme", "light");
+            }
+            else
+            {
+                BrowserWindow.getFocusedWindow().nativeTheme.themeSource = 'dark'
+                settings.set("theme", "dark");
+            }
+            try
+            {
+                document.querySelector('.themeBtn.rightMenuBtnMarked').classList.remove('rightMenuBtnMarked')
+            }
+            catch(error){}
+            source.target.classList.add('rightMenuBtnMarked')
+        }
+    }
+    else
+    {
+        if(!temp.includes('rightMenuBtnMarked'))
+        {
+            let x = null
+            if(temp.includes('pl'))
+            {
+                settings.set("language", "pl");
+                x = 'pl'
+            }
+            else
+            {
+                settings.set("language", "eng");
+                x = 'eng'
+            }
+            const jsonFilePath = path.join(__dirname, 'language.json');
+            fs.readFile(jsonFilePath, 'utf8', (err, data) => 
+            {
+                data = JSON.parse(data)
+                data = data[x]
+                x = document.querySelectorAll('.lang')
+                for(let i=0; i<x.length; i++)
+                {
+                    x[i].innerHTML = data[i]
+                }
+            });
+            try
+            {
+                document.querySelector('.langBtn.rightMenuBtnMarked').classList.remove('rightMenuBtnMarked')
+            }
+            catch(error){}
+            source.target.classList.add('rightMenuBtnMarked')
+        }
+    }
+}
 
 function aboutProgram()
 {
@@ -277,56 +385,6 @@ function refreshLoop()
     }, 1000);
 }
 
-function changeTheme(event)
-{
-    let temp = null
-    if(Array.from(event.currentTarget.classList).includes('lightSwitch'))
-    {
-        temp = 'darkSwitch'
-    }
-    else
-    {
-        temp = 'lightSwitch'
-    }
-    if(Array.from(event.currentTarget.classList).includes('marked'))
-    {
-        document.querySelector(format('.{}', temp)).classList.add('marked')
-        event.currentTarget.classList.remove('marked')
-        ///ACTION
-    }
-    else
-    {
-        document.querySelector(format('.{}', temp)).classList.remove('marked')
-        event.currentTarget.classList.add('marked')
-        //ACTION
-    }
-}
-
-function changeLanguage(event)
-{
-    let temp = null
-    if(Array.from(event.currentTarget.classList).includes('engSwitch'))
-    {
-        temp = 'plSwitch'
-    }
-    else
-    {
-        temp = 'engSwitch'
-    }
-    if(Array.from(event.currentTarget.classList).includes('marked'))
-    {
-        document.querySelector(format('.{}', temp)).classList.add('marked')
-        event.currentTarget.classList.remove('marked')
-        ///ACTION
-    }
-    else
-    {
-        document.querySelector(format('.{}', temp)).classList.remove('marked')
-        event.currentTarget.classList.add('marked')
-        //ACTION
-    }
-}
-
 function changePWMduty(event)
 {
     let temp = parseInt(event.currentTarget.value)
@@ -371,10 +429,6 @@ $(document).ready(function()
     $('.topBarCloseAppButton').on('click', closeApp)
     $('.connectButton').on('click', connect)
     $('.disconnectButton').on('click', disconnect)
-    $('.lightSwitch').on('click', changeTheme)
-    $('.darkSwitch').on('click', changeTheme)
-    $('.plSwitch').on('click', changeLanguage)
-    $('.engSwitch').on('click', changeLanguage)
     $('.pwmFreqSlider').on('input', changePWMfrequency)
     // $('.pwmFreqButton').on('click', changePWMfrequency)
     $('.pwmDutySlider').on('input', changePWMduty)
@@ -383,21 +437,13 @@ $(document).ready(function()
     $('.stepTempSlider').on('input', changeTempStep)
     $('.minPressSlider').on('input', changePressMin)
     $('.stepPressSlider').on('input', changePressStep)
+    
+    $('.langBtn').on('click', changeSettings)
+    $('.themeBtn').on('click', changeSettings)
 
+    loadSettings();
+    
     setCloseAllDialogs()
+    $('body').fadeIn(1000)
     refreshLoop()
 });
-
-// EXCHANGED DATA BETWEEN PC AND DEVICE
-// {
-//     id: 0,
-//     temp: 0,
-//     press: 0
-//     temp_min: 0,
-//     temp_step: 0,
-//     press_min: 0,
-//     press_step: 0,
-//     prescaler: 0,
-//     counterPeriod: 0,
-//     ccr: 0
-// }

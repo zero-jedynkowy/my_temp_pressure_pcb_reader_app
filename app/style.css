@@ -666,6 +666,17 @@ html, body
         background-color: #1a1a1a;
         transition: background-color 500ms ease-out;
     }
+
+    .rightMenuTitle
+    {
+        color: white;
+    }
+
+    .rightMenuBtnMarked
+    {
+        background-color: #0059ff;
+        color: white;
+    }
 }
   
 @media (prefers-color-scheme: light) 
@@ -743,4 +754,70 @@ html, body
         background-color: #a0a0a0;
         transition: background-color 500ms ease-out;
     }
+
+    .rightMenuTitle
+    {
+        color: black;
+    }
+
+    .rightMenuBtnMarked
+    {
+        background-color: #0059ff;
+        color: white;
+    }
+}
+
+.rightMenuTitle
+{
+    width: 100%;
+    font-size: 25px;
+    margin: 10px 0 10px 0;
+}
+
+.langParent, .themeParent
+{
+    width: 100%;
+}
+
+.langBtn
+{
+    width: 100%;
+    font-size: 25px;
+    border: 0;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.langBtn:first-of-type
+{
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.langBtn:last-of-type
+{
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.themeBtn
+{
+    width: 100%;
+    font-size: 20px;
+    border: 0;
+    border-radius: 0;
+    padding: 10px;
+    text-align: center;
+}
+
+.themeBtn:first-of-type
+{
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.themeBtn:last-of-type
+{
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
 }

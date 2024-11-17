@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="node_modules/bootstrap-icons/font/bootstrap-icons.min.css">  
     </head>
 
-    <body>
+    <body style="display: none;">
         <div class="appCanva">
             <div class="topBar container-fluid">
                 <div class="row">
@@ -29,13 +29,13 @@
                 <div class="dialogBackground"></div>
 
                 <div class="dialog aboutProgramDialog position-absolute top-0 start-50 translate-middle-x">
-                    <div class="dialogTitle">O programie</div>
+                    <div class="dialogTitle lang">O programie</div>
                     <i class="dialogCloseButton position-absolute top-0 end-0 bi bi-x-lg"></i>
                     <div class="dialogContent">
-                        <p class="m-0 p-0">Tytuł: TempPress</p>
-                        <p class="m-0 p-0">Autor: Karol Ambroziński</p>
-                        <p class="m-0 p-0">Czcionka: Kanit</p>
-                        <p class="m-0 p-0">Użyte narzędzia:</p>
+                        <p class="m-0 p-0 lang">Tytuł: TempPress</p>
+                        <p class="m-0 p-0 lang">Autor: Karol Ambroziński</p>
+                        <p class="m-0 p-0 lang">Czcionka: Kanit</p>
+                        <p class="m-0 p-0 lang">Użyte narzędzia:</p>
                         <ul>
                             <li>Bootstrap</li>
                             <li>serialport</li>
@@ -51,36 +51,36 @@
                     <!-- <div class="dialogTitle">O programie</div> -->
                     <!-- <i class="dialogCloseButton position-absolute top-0 end-0 bi bi-x-lg"></i> -->
                     <div class="dialogContent">
-                        <p class="p-0 m-0">Łączenie z urządzeniem...</p>
+                        <p class="p-0 m-0 lang">Łączenie z urządzeniem...</p>
                     </div>
                 </div>
 
                 <div class="dialog cannotConnectDialog position-absolute top-0 start-50 translate-middle-x">
-                    <div class="dialogTitle">Komunikat</div>
+                    <div class="dialogTitle lang">Komunikat</div>
                     <i class="dialogCloseButton position-absolute top-0 end-0 bi bi-x-lg"></i>
                     <div class="dialogContent">
-                        <p class="m-0 p-0">Nie można połączyć się z urządzeniem</p>
+                        <p class="m-0 p-0 lang">Nie można połączyć się z urządzeniem</p>
                     </div>
                 </div>
 
                 <div class="dialog disconnectDialog position-absolute top-0 start-50 translate-middle-x">
-                    <div class="dialogTitle">Komunikat</div>
+                    <div class="dialogTitle lang">Komunikat</div>
                     <i class="dialogCloseButton position-absolute top-0 end-0 bi bi-x-lg"></i>
                     <div class="dialogContent">
-                        <p class="m-0 p-0">Rozłączono z urządzeniem</p>
+                        <p class="m-0 p-0 lang">Rozłączono z urządzeniem</p>
                     </div>
                 </div>
 
                 <div class="dialog notChoosenDeviceDialog position-absolute top-0 start-50 translate-middle-x">
-                    <div class="dialogTitle">Komunikat</div>
+                    <div class="dialogTitle lang">Komunikat</div>
                     <i class="dialogCloseButton position-absolute top-0 end-0 bi bi-x-lg"></i>
                     <div class="dialogContent">
-                        <p class="m-0 p-0">Nie wybrano urządzenia</p>
+                        <p class="m-0 p-0 lang">Nie wybrano urządzenia</p>
                     </div>
                 </div>
                 
                 <div class="devicesList flex-column">
-                    <div class="deviceListTitle">Wybierz urządzenie</div>
+                    <div class="deviceListTitle lang">Wybierz urządzenie</div>
                     <div class="d-flex flex-row">
                         <div class="devicesListMainList">
                             <div class="devicesListContent">
@@ -91,8 +91,19 @@
                             </div>
                         </div>
                         <div class="devicesListMenu">
-                            <button class="connectButton devicesListMenuButton">Połącz</button>
-                            <button class="aboutButton devicesListMenuButton">O programie</button>
+                            <button class="connectButton devicesListMenuButton lang">Połącz</button>
+                            <button class="aboutButton devicesListMenuButton lang">O programie</button>
+                            <div class="rightMenuTitle lang">Language</div>
+                            <div class="d-flex flex-row langParent">
+                                <button class="langBtn eng">ENG</button>
+                                <button class="langBtn pl">PL</button>
+                            </div>
+                            <div class="rightMenuTitle lang">Motyw</div>
+                            <div class="d-flex flex-row themeParent">
+                                <button class="themeBtn system lang">System</button>
+                                <button class="themeBtn light lang">Jasny</button>
+                                <button class="themeBtn dark lang">Ciemny</button>
+                            </div>
                             <!-- <div class="switch d-flex flex-row">
                                 <button class="marked firstSwitch bi bi-brightness-high lightSwitch"></button>
                                 <button class="noMarked secondSwitch bi bi-moon-stars darkSwitch"></button>
@@ -106,30 +117,30 @@
                 </div>
 
                 <div class="devicePanel flex-column">
-                    <div class="devicePanelTitle">Panel urządzenia</div>
+                    <div class="devicePanelTitle lang">Panel urządzenia</div>
                     <div class="d-flex flex-column">
                         <div class="d-flex flex-row">
                             <div class="deviceID">TempPress Sensor</div>
                             <!-- <div class="deviceUpdate"></div> -->
-                            <div class="disconnectButton">Rozłącz się</div>
+                            <div class="disconnectButton lang">Rozłącz się</div>
                         </div>
                         
                         <div class="d-flex flex-row measurementsPanel">
                             <div class="deviceMeasurement">
-                                <p>Temperatura</p>
+                                <p class="lang">Temperatura</p>
                                 <p class="tempValue">23.40 &deg;C</p>
                             </div>
                             <div class="deviceMeasurement">
-                                <p>Ciśnienie</p>
+                                <p class="lang">Ciśnienie</p>
                                 <p class="pressValue">1024.23 hPa</p>
                             </div>
                         </div>
 
                         <div class="d-flex flex-column pwmPanel">
-                            <div class="pwmPanelTitle">Ustawienia PWM</div>
+                            <div class="pwmPanelTitle lang">Ustawienia PWM</div>
                             <div class="pwmContent d-flex flex-row">
                                 <div class="pwmSettings">
-                                    <p>Częstotliwość</p>
+                                    <p class="lang">Częstotliwość</p>
                                     <p class="freqHolder">23000 kHz</p>
                                     <input type="range" min="1" max="100" value="1" class="slider pwmFreqSlider">
                                     <!-- <div class="d-flex flex-row pwmEnterValue">
@@ -138,7 +149,7 @@
                                     </div> -->
                                 </div>
                                 <div class="pwmCurrentState">
-                                    <p>Wypełnienie</p>
+                                    <p class="lang">Wypełnienie</p>
                                     <p class="dutyHolder">50 %</p>
                                     <input type="range" min="0" max="100" value="50" class="slider pwmDutySlider">
                                     <!-- <div class="d-flex flex-row pwmEnterValue">
@@ -150,17 +161,17 @@
                         </div>
 
                         <div class="d-flex flex-column diodesPanel">
-                            <div class="diodesPanelTitle">Ustawienia diod</div>
+                            <div class="diodesPanelTitle lang">Ustawienia diod</div>
                             <div class="diodesContent d-flex flex-row">
                                 <div class="diodesSettings">
-                                    <p>Minimum temperatury</p>
+                                    <p class="lang">Minimum temperatury</p>
                                     <p class="tempMinHolder">20 &deg;C</p>
                                     <input type="range" min="-40" max="40" value="1" class="slider minTempSlider">
                                     <!-- <div class="d-flex flex-row pwmEnterValue">
                                         <input id="number" type="number" value="42" class="minTempInput"/>
                                         <button class="bi bi-arrow-90deg-left minTempButton"></button>
                                     </div> -->
-                                    <p>Krok zmiany temperatury</p>
+                                    <p class="lang">Krok zmiany temperatury</p>
                                     <p class="tempStepHolder">20 &deg;C</p>
                                     <input type="range" min="1" max="20" value="1" class="slider stepTempSlider">
                                     <!-- <div class="d-flex flex-row pwmEnterValue">
@@ -169,14 +180,14 @@
                                     </div> -->
                                 </div>
                                 <div class="diodesSettings">
-                                    <p>Minimum cisnienia</p>
+                                    <p class="lang">Minimum cisnienia</p>
                                     <p class="pressMinHolder">500 hPa</p>
                                     <input type="range" min="100" max="1200" value="100" class="slider minPressSlider">
                                     <!-- <div class="d-flex flex-row pwmEnterValue">
                                         <input id="number" type="number" value="42" />
                                         <button class="bi bi-arrow-90deg-left minPressButton"></button>
                                     </div> -->
-                                    <p>Krok zmiany ciśnienia</p>
+                                    <p class="lang">Krok zmiany ciśnienia</p>
                                     <p class="pressStepHolder">500 hPa</p>
                                     <input type="range" min="1" max="500" value="50" class="slider stepPressSlider">
                                     <!-- <div class="d-flex flex-row pwmEnterValue">
@@ -198,7 +209,6 @@
         <script type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="node_modules/jquery-ui/dist/jquery-ui.min.js"></script>
         <script src="node_modules/chart.js/dist/chart.umd.js"></script>
-        <script type="text/javascript" src="myDialog.js"></script>
         <script src="renderer.js"></script>
     </body>
 </html>
