@@ -9,6 +9,20 @@ The PCB was designed in Altium Designer.
 The PC App was created in Visual Studio Code with Electron.
 The MCU Source Code was created in STM32CubeIDE.
 
+### PC App
+
+To run the app you need type in the console:
+```console
+user@pc:~$ cd app
+user@pc:~$ yarn install
+user@pc:~$ yarn start
+```
+
+To build the APP you need type in the console:
+```console
+user@pc:~$ cd app
+```
+
 ### PC App Images
 
 ![alt text](readme_files/image.png)
@@ -20,3 +34,4 @@ The MCU Source Code was created in STM32CubeIDE.
 ### PCB Images
 
 ![alt text](readme_files/image-3.png)
+
