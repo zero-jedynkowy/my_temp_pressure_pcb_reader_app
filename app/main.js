@@ -1,45 +1,88 @@
-const {app, BrowserWindow, nativeTheme} = require('electron/main')
-const settings = require('electron-settings')
+const {app, BrowserWindow, ipcMain, systemPreferences, nativeTheme} = require('electron/main')
+const path = require('node:path')
+const { SerialPort } = require('serialport') 
+let settings = require('electron-settings');
+const YAML = require('yaml')
+var fs = require('fs')
 
-require('@electron/remote/main').initialize()
+console.log(settings)
 
-function createWindow () 
+const createWindow = () => 
 {
     const win = new BrowserWindow(
     {
-        width: 800,
-        // minHeight: 500,
-        // resizable: false,
-        height: 650,
-        maximizable: false,
-        transparent: true,
+        width: 700,
+        height: 600,
+        titleBarStyle: 'hidden',
         frame: false,
+        resizable: false,
+        transparent: true,
         webPreferences: 
         {
-            nodeIntegration: true,
-            contextIsolation: false,
-            enableRemoteModule: true,
+            preload: path.join(__dirname, 'preload.js')
         }
     })
-    
-    require('@electron/remote/main').enable(win.webContents)
+    console.log(settings.file())
     win.loadFile('index.html')
-    win.settings = settings
-    win.nativeTheme = nativeTheme
-    win.webContents.openDevTools();
+    // win.openDevTools()
 }
 
 app.whenReady().then(() => 
 {
-    createWindow()
-
-    app.on('activate', () => 
+    // SERIALPORT
+    ipcMain.handle('serialport.list', () =>
     {
-        if (BrowserWindow.getAllWindows().length === 0) 
-        {
-            createWindow()
-        }
+        return SerialPort.list()
     })
+    
+    // SETTINGS
+    ipcMain.handle('settings.hasSync', (event, {id}) => 
+    {
+        console.log(id)
+        return settings.hasSync()
+    })
+
+    ipcMain.handle('settings.getSync', (event, {id}) => 
+    {
+        return settings.getSync()
+    })
+
+    ipcMain.handle('settings.setSync', (event, {val}) => 
+    {
+        console.log(val)
+        return settings.setSync(val)
+    })
+
+    ipcMain.handle('settings.isDarkMode', () => 
+    {
+        let isDarkMode = null
+        if (process.platform === 'darwin') 
+        {
+            isDarkMode = systemPreferences.isDarkMode()
+            console.log('Ciemny motyw:', isDarkMode)
+        }
+        else
+        {
+            isDarkMode = nativeTheme.shouldUseDarkColors
+        }
+        return isDarkMode
+    })
+
+    ipcMain.handle('settings.loadLanguage', (event, {lang}) => 
+    {
+        const file = fs.readFileSync('./' + lang + '.yml', 'utf8')
+        return YAML.parse(file)
+    })
+    
+    
+    createWindow()
+    // app.on('activate', () => 
+    // {
+    //     if (BrowserWindow.getAllWindows().length === 0) 
+    //     {
+    //         createWindow()
+    //     }
+    // })
 })
 
 app.on('window-all-closed', () => 

@@ -1,14 +1,15 @@
-const {contextBridge, ipcRenderer} = require('electron')
-const { DelimiterParser } = require('@serialport/parser-delimiter')
-const {SerialPort} = require('serialport')
+const { contextBridge,  ipcRenderer} = require('electron/renderer')
 
-
-contextBridge.exposeInMainWorld('electronAPI', 
+contextBridge.exposeInMainWorld('serialport', 
 {
-    closeApp: () => ipcRenderer.send('closeApp'),
-    minimalizeApp: () => ipcRenderer.send('minimalizeApp'),
-    devicesList: () => ipcRenderer.invoke('devicesList'),
-    createPort: (path, baudRate) => {return new SerialPort({ path: path, baudRate: baudRate})}
-  
-    // test: () => {return require('serialport')}
+    list: () => ipcRenderer.invoke('serialport.list')
+})
+
+contextBridge.exposeInMainWorld('settings', 
+{
+    hasSync: (id) => ipcRenderer.invoke('settings.hasSync', {id}),
+    getSync: (id) => ipcRenderer.invoke('settings.getSync', {id}),
+    setSync: (val) => ipcRenderer.invoke('settings.setSync', {val}),
+    isDarkMode: () => ipcRenderer.invoke('settings.isDarkMode'),
+    loadLanguage: (lang) => ipcRenderer.invoke('settings.loadLanguage', {lang})
 })

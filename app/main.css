@@ -1,0 +1,74 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+* {
+  --sb-track-color: var(--color-gray-900);
+  --sb-thumb-color: var(--color-gray-600);
+  --sb-size: 24px;
+}
+
+
+*::-webkit-scrollbar {
+  width: var(--sb-size)
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--sb-track-color);
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb-color);
+  border-radius: 3px;
+  
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-color: var(--sb-thumb-color)
+                     var(--sb-track-color);
+  }
+}
+
+.slider 
+{
+    appearance: none;
+    width: 100%;
+    height: 12px;
+    border-radius: 4px;
+    /* background-color: #00b56d; */
+    cursor: pointer;
+}
+  
+.slider::-webkit-slider-thumb 
+{
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 5px;
+    background: #ff5858;
+    box-shadow: none;
+}
+  
+
+.slider::-moz-range-thumb 
+{
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 9999px;
+    background: #1cff00;
+    box-shadow: none;
+}
+
+.slider:focus
+{
+  outline: none;
+}
+
+.switchThumb
+{
+  right: 0;
+  transition: right 0.25s ease;
+}

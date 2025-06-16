@@ -1,176 +1,126 @@
 <!DOCTYPE html>
-<html>
-
+<html class="dark">
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
-        <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="style.css">
-        <link rel="stylesheet" href="node_modules/@fontsource/kanit/200.css">
-        <link rel="stylesheet" href="node_modules/bootstrap-icons/font/bootstrap-icons.min.css">  
+        <meta charset="UTF-8" />
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'"/>
+        <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"/>
+        <title>TempPress App</title>
+        <link rel="stylesheet" href="main.css"/>
+        <link rel="stylesheet" href="node_modules/bootstrap-icons/font/bootstrap-icons.min.css"/>
+        <link rel="stylesheet" href="node_modules/@fontsource/montserrat/400.css"/>
+        <link rel="stylesheet" href="tailwind.css"/>
     </head>
-
-    <body style="display: none;">
-        <div class="appCanva">
-            <div class="topBar container-fluid">
-                <div class="row">
-                    <div class="col-3"></div>
-                    <div class="topBarTitle col-6">TempPress App</div>
-                    <div class="topBarButtons d-flex flex-row-reverse col-3">
-                        <i class="topBarCloseAppButton bi bi-x-lg"></i>
-                        <i class="topBarMinimalizeAppButton bi bi-dash-lg"></i>
-                    </div>
+    <body class="w-[100vw] h-[100vh] font-['Montserrat'] bg-transparent">
+        <!-- CONTAINER -->
+        <div class="w-[100vw] h-[100%] flex flex-col dark:bg-gray-700 rounded-lg bg-white" id="container">
+            <!-- TOP BAR -->
+            <div class="flex flex-row w-full text-[1.1rem] dark:text-white border-b-[1px] border-gray-500 text-black" id="topBar">
+                <div class="w-full"></div>
+                <div class="w-full text-center p-[0.5rem]" data-lang="0">TempPress App</div>
+                <div class="w-full flex flex-row justify-end">
+                    <i class="bi bi-dash-lg p-[0.5rem]"></i>
+                    <i class="bi bi-x-lg p-[0.5rem] bg-red-500 rounded-tr-lg"></i>
                 </div>
             </div>
+            <!-- CONTENT -->
+            <div class="h-[100%] w-full p-[2rem] overflow-y-auto" id="content">
+                <!-- CONNECTING PANEL -->
+                <div class="flex flex-col w-full h-full gap-[2rem] dark:text-white text-black" id="connectingPanel">
+                    <div class="text-[2.5rem] leading-[2.5rem] h-[2.5rem]" data-lang="1">Connect to the device</div>
+                    <div class="flex flex-row h-full gap-[1rem]">
+                        <div class=" w-[60%] flex flex-col gap-[1rem] h-full">
+                            <div class="w-full h-[26.5rem] rounded-lg dark:bg-gray-800 bg-gray-300 p-[1rem]">
+                               <div class="h-full overflow-y-scroll w-full gap-[1rem] flex flex-col" id="serialportList">
+                                    <!-- <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div> -->
 
-            <div class="mainContent">
-                
-                <div class="dialogBackground"></div>
-
-                <div class="dialog aboutProgramDialog position-absolute top-0 start-50 translate-middle-x">
-                    <div class="dialogTitle lang">O programie</div>
-                    <i class="dialogCloseButton position-absolute top-0 end-0 bi bi-x-lg"></i>
-                    <div class="dialogContent">
-                        <p class="m-0 p-0 lang">Tytuł: TempPress</p>
-                        <p class="m-0 p-0 lang">Autor: Karol Ambroziński</p>
-                        <p class="m-0 p-0 lang">Czcionka: Kanit</p>
-                        <p class="m-0 p-0 lang">Użyte narzędzia:</p>
-                        <ul>
-                            <li>Bootstrap</li>
-                            <li>serialport</li>
-                            <li>Bootstrap Icons</li>
-                            <li>JQuery</li>
-                            <li>JQuery UI</li>
-                            <li>string-Format</li>
-                        </ul> 
-                    </div>
-                </div>
-
-                <div class="dialog connectingDialog position-absolute top-0 start-50 translate-middle-x">
-                    <div class="dialogContent">
-                        <p class="p-0 m-0 lang">Łączenie z urządzeniem...</p>
-                    </div>
-                </div>
-
-                <div class="dialog cannotConnectDialog position-absolute top-0 start-50 translate-middle-x">
-                    <div class="dialogTitle lang">Komunikat</div>
-                    <i class="dialogCloseButton position-absolute top-0 end-0 bi bi-x-lg"></i>
-                    <div class="dialogContent">
-                        <p class="m-0 p-0 lang">Nie można połączyć się z urządzeniem</p>
-                    </div>
-                </div>
-
-                <div class="dialog disconnectDialog position-absolute top-0 start-50 translate-middle-x">
-                    <div class="dialogTitle lang">Komunikat</div>
-                    <i class="dialogCloseButton position-absolute top-0 end-0 bi bi-x-lg"></i>
-                    <div class="dialogContent">
-                        <p class="m-0 p-0 lang">Rozłączono z urządzeniem</p>
-                    </div>
-                </div>
-
-                <div class="dialog notChoosenDeviceDialog position-absolute top-0 start-50 translate-middle-x">
-                    <div class="dialogTitle lang">Komunikat</div>
-                    <i class="dialogCloseButton position-absolute top-0 end-0 bi bi-x-lg"></i>
-                    <div class="dialogContent">
-                        <p class="m-0 p-0 lang">Nie wybrano urządzenia</p>
-                    </div>
-                </div>
-                
-                <div class="devicesList flex-column">
-                    <div class="deviceListTitle lang">Wybierz urządzenie</div>
-                    <div class="d-flex flex-row">
-                        <div class="devicesListMainList">
-                            <div class="devicesListContent">
-                                <!-- <div class="device">
-                                    <div class="deviceTitle">/dev/ttyUSB0</div>
-                                </div> -->
-                            </div>
-                        </div>
-                        <div class="devicesListMenu">
-                            <button class="connectButton devicesListMenuButton lang">Połącz</button>
-                            <button class="aboutButton devicesListMenuButton lang">O programie</button>
-                            <div class="rightMenuTitle lang">Language</div>
-                            <div class="d-flex flex-row langParent">
-                                <button class="langBtn eng">ENG</button>
-                                <button class="langBtn pl">PL</button>
-                            </div>
-                            <div class="rightMenuTitle lang">Motyw</div>
-                            <div class="d-flex flex-row themeParent">
-                                <button class="themeBtn system lang">System</button>
-                                <button class="themeBtn light lang">Jasny</button>
-                                <button class="themeBtn dark lang">Ciemny</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="devicePanel flex-column">
-                    <div class="devicePanelTitle lang">Panel urządzenia</div>
-                    <div class="d-flex flex-column">
-                        <div class="d-flex flex-row">
-                            <div class="deviceID">TempPress Sensor</div>
-                            <div class="disconnectButton lang">Rozłącz się</div>
-                        </div>
-                        
-                        <div class="d-flex flex-row measurementsPanel">
-                            <div class="deviceMeasurement">
-                                <p class="lang">Temperatura</p>
-                                <p class="tempValue">23.40 &deg;C</p>
-                            </div>
-                            <div class="deviceMeasurement">
-                                <p class="lang">Ciśnienie</p>
-                                <p class="pressValue">1024.23 hPa</p>
-                            </div>
-                        </div>
-
-                        <div class="d-flex flex-column pwmPanel">
-                            <div class="pwmPanelTitle lang">Ustawienia PWM</div>
-                            <div class="pwmContent d-flex flex-row">
-                                <div class="pwmSettings">
-                                    <p class="lang">Częstotliwość</p>
-                                    <p class="freqHolder">23000 kHz</p>
-                                    <input type="range" min="1" max="100" value="1" class="slider pwmFreqSlider">
-                                </div>
-                                <div class="pwmCurrentState">
-                                    <p class="lang">Wypełnienie</p>
-                                    <p class="dutyHolder">50 %</p>
-                                    <input type="range" min="0" max="100" value="50" class="slider pwmDutySlider">
                                 </div>
                             </div>
                         </div>
-
-                        <div class="d-flex flex-column diodesPanel">
-                            <div class="diodesPanelTitle lang">Ustawienia diod</div>
-                            <div class="diodesContent d-flex flex-row">
-                                <div class="diodesSettings">
-                                    <p class="lang">Minimum temperatury</p>
-                                    <p class="tempMinHolder">20 &deg;C</p>
-                                    <input type="range" min="-40" max="40" value="1" class="slider minTempSlider">
-                                    <p class="lang">Krok zmiany temperatury</p>
-                                    <p class="tempStepHolder">20 &deg;C</p>
-                                    <input type="range" min="1" max="20" value="1" class="slider stepTempSlider">
+                        <div class="w-[40%] h-full gap-[1rem] flex flex-col">
+                            <button class="bg-green-400 text-black w-full text-center text-[1.25rem] p-[1rem] rounded-md font-bold" data-lang="2">Connect</button>
+                            <!-- <button class="bg-blue-600 text-white w-full text-center text-[1.25rem] p-[1rem] rounded-md font-bold">Refresh</button> -->
+                            <button class="bg-blue-800 text-white w-full text-center text-[1.25rem] p-[1rem] rounded-md font-bold" data-lang="3">About</button>
+                            <div class="text-[1.25rem]" data-lang="4">Theme</div>
+                            <div class="switch dark:bg-gray-600 bg-gray-300 w-full flex flex-row before:content-[''] dark:text-white text-black relative rounded-lg" id="themeSwitch">
+                                <div class="switchThumb w-[calc(100%*1/3)] dark:bg-gray-800 bg-gray-400 absolute h-full rounded-lg"></div>
+                                <div class="switchOption w-[100%] text-center z-[2] pt-[1rem] pb-[1rem]" data-option="system">System</div>
+                                <div class="switchOption w-[100%] text-center z-[2] pt-[1rem] pb-[1rem]" data-option="dark" data-lang="5">Dark</div>
+                                <div class="switchOption w-[100%] text-center z-[2] pt-[1rem] pb-[1rem]" data-option="light" data-lang="6">Light</div>
+                            </div>
+                            <div class="text-[1.25rem]" data-lang="7">Language</div>
+                            <div class="switch dark:bg-gray-600 bg-gray-300 w-full flex flex-row before:content-[''] dark:text-white text-black relative rounded-lg" id="languageSwitch">
+                                <div class="switchThumb w-[calc(100%*1/2)] dark:bg-gray-800 bg-gray-400 absolute h-full rounded-lg"></div>
+                                <div class="switchOption w-[100%] text-center z-[2] pt-[1rem] pb-[1rem]" data-option="pl">PL</div>
+                                <div class="switchOption w-[100%] text-center z-[2] pt-[1rem] pb-[1rem]" data-option="eng">ENG</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- DEVICE PANEL -->
+                <!-- <div class="flex flex-col w-full h-full gap-[2rem] text-white mb-[2rem]" id="devicePanel">
+                    <div class="text-[2.5rem] leading-[2.5rem] h-[2.5rem]">Device panel</div>
+                    <div class="flex flex-col gap-[1rem]">
+                        <div class="flex flex-row gap-[1rem]">
+                            <div class="bg-green-300 flex flex-col w-full text-black p-[1rem] rounded-lg">
+                                <div class="w-full text-center text-[1.5rem]">Temperature</div>
+                                <div class="flex flex-row justify-center text-[2.5rem] font-bold">
+                                    <div class="">2</div>
+                                    <div class="">2</div>
+                                    <div class="">.</div>
+                                    <div class="">2</div>
+                                    <div class="">2</div>
+                                    <div class="">&nbsp;&deg;C</div>
                                 </div>
-                                <div class="diodesSettings">
-                                    <p class="lang">Minimum cisnienia</p>
-                                    <p class="pressMinHolder">500 hPa</p>
-                                    <input type="range" min="100" max="1200" value="100" class="slider minPressSlider">
-                                    <p class="lang">Krok zmiany ciśnienia</p>
-                                    <p class="pressStepHolder">500 hPa</p>
-                                    <input type="range" min="1" max="500" value="50" class="slider stepPressSlider">
+                            </div>
+                            <div class="bg-red-400 flex flex-col w-full p-[1rem] rounded-lg text-black">
+                                <div class="w-full text-center text-[1.5rem]">Pressure</div>
+                                <div class="flex flex-row justify-center text-[2.5rem] font-bold">
+                                    <div class="">1</div>
+                                    <div class="">0</div>
+                                    <div class="">0</div>
+                                    <div class="">0</div>
+                                    <div class="">.</div>
+                                    <div class="">2</div>
+                                    <div class="">2</div>
+                                    <div class="">&nbsp;hPa</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-indigo-500 flex flex-col w-full p-[1rem] rounded-lg text-black gap-[1rem]">
+                            <div class="text-[1.5rem]">PWM Settings</div>
+                            <div class="flex flex-row gap-[1rem]">
+                                <div class="w-full flex-col flex gap-[1rem]">
+                                    <div class="font-bold">PWM Frequency</div>
+                                    <div class="text-[2rem]">20000 Hz</div>
+                                    <input type="range" class="slider bg-white">
+                                </div>
+                                <div class="w-full flex-col flex gap-[1rem]">
+                                    <div class="font-bold">PWM Duty</div>
+                                    <div class="text-[2rem]">100 %</div>
+                                    <input type="range" class="slider bg-white">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-orange- flex flex-col w-full p-[1rem] rounded-lg text-black gap-[1rem] mb-[2rem]">
+                            <div class="text-[1.5rem]">PWM Settings</div>
+                            <div class="flex flex-row gap-[1rem]">
+                                <div class="w-full flex-col flex gap-[1rem]">
+                                    <div class="font-bold">PWM Frequency</div>
+                                    <div class="text-[2rem]">20000 Hz</div>
+                                    <input type="range" class="slider bg-white">
+                                </div>
+                                <div class="w-full flex-col flex gap-[1rem]">
+                                    <div class="font-bold">PWM Duty</div>
+                                    <div class="text-[2rem]">100 %</div>
+                                    <input type="range" class="slider bg-white">
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
-            
         </div>
-        <script src="node_modules/string-format/index.js"></script>
-        <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
-        <script type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
-        <script type="text/javascript" src="node_modules/jquery-ui/dist/jquery-ui.min.js"></script>
-        <script src="node_modules/chart.js/dist/chart.umd.js"></script>
-        <script src="renderer.js"></script>
     </body>
+    <script src="./node_modules/chart.js/dist/chart.umd.min.js"></script>
+    <script src="./renderer.js"></script>
 </html>
