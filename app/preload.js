@@ -11,5 +11,11 @@ contextBridge.exposeInMainWorld('settings',
     getSync: (id) => ipcRenderer.invoke('settings.getSync', {id}),
     setSync: (val) => ipcRenderer.invoke('settings.setSync', {val}),
     isDarkMode: () => ipcRenderer.invoke('settings.isDarkMode'),
-    loadLanguage: (lang) => ipcRenderer.invoke('settings.loadLanguage', {lang})
+    loadLanguage: (lang) => ipcRenderer.invoke('settings.loadLanguage', {lang}),
+})
+
+contextBridge.exposeInMainWorld('app', 
+{
+    close: () => ipcRenderer.invoke('app.close'),
+    minimize: () => ipcRenderer.invoke('app.minimize')
 })

@@ -18,21 +18,35 @@
                 <div class="w-full"></div>
                 <div class="w-full text-center p-[0.5rem]" data-lang="0">TempPress App</div>
                 <div class="w-full flex flex-row justify-end">
-                    <i class="bi bi-dash-lg p-[0.5rem]"></i>
-                    <i class="bi bi-x-lg p-[0.5rem] bg-red-500 rounded-tr-lg"></i>
+                    <i class="bi bi-dash-lg p-[0.5rem]" id="minimizeAppBtn"></i>
+                    <i class="bi bi-x-lg p-[0.5rem] bg-red-500 rounded-tr-lg" id="closeAppBtn"></i>
                 </div>
             </div>
             <!-- CONTENT -->
-            <div class="h-[100%] w-full p-[2rem] overflow-y-auto" id="content">
+            <div class="h-[100%] w-full p-[2rem] overflow-y-auto relative" id="content">
                 <!-- CONNECTING PANEL -->
-                <div class="flex flex-col w-full h-full gap-[2rem] dark:text-white text-black" id="connectingPanel">
+
+
+                <div class="flex flex-col w-full h-[1000px] gap-[2rem] dark:text-white text-black" id="connectingPanel">
                     <div class="text-[2.5rem] leading-[2.5rem] h-[2.5rem]" data-lang="1">Connect to the device</div>
                     <div class="flex flex-row h-full gap-[1rem]">
                         <div class=" w-[60%] flex flex-col gap-[1rem] h-full">
                             <div class="w-full h-[26.5rem] rounded-lg dark:bg-gray-800 bg-gray-300 p-[1rem]">
                                <div class="h-full overflow-y-scroll w-full gap-[1rem] flex flex-col" id="serialportList">
-                                    <!-- <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div> -->
-
+                                    <!-- <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md" data-id="2">COM8</div>
+                                    <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div>
+                                    <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div>
+                                    <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div>
+                                    <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div>
+                                    <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div>
+                                    <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div>
+                                    <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div>
+                                    <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div>
+                                    <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div>
+                                    <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div>
+                                    <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div>
+                                    <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div>
+                                    <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div> -->
                                 </div>
                             </div>
                         </div>

@@ -1,7 +1,20 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
-* {
+*
+{
+  user-select: none;
+}
+
+html > * 
+{
+  --sb-track-color: var(--color-gray-500);
+  --sb-thumb-color: var(--color-gray-400);
+  --sb-size: 24px;
+}
+
+html.dark > * 
+{
   --sb-track-color: var(--color-gray-900);
   --sb-thumb-color: var(--color-gray-600);
   --sb-size: 24px;
@@ -71,4 +84,29 @@
 {
   right: 0;
   transition: right 0.25s ease;
+}
+
+#topBar 
+{
+  app-region: drag;
+}
+
+#topBar > * > i
+{
+  app-region: no-drag;
+}
+
+/* .marked
+{
+  background-color: var(--color-gray-700);
+} */
+
+html.dark .marked
+{
+  background-color: var(--color-gray-700);
+}
+
+html .marked
+{
+  background-color: var(--color-gray-500);
 }

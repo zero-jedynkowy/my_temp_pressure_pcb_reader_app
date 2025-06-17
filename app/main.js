@@ -5,8 +5,6 @@ let settings = require('electron-settings');
 const YAML = require('yaml')
 var fs = require('fs')
 
-console.log(settings)
-
 const createWindow = () => 
 {
     const win = new BrowserWindow(
@@ -22,9 +20,9 @@ const createWindow = () =>
             preload: path.join(__dirname, 'preload.js')
         }
     })
-    console.log(settings.file())
     win.loadFile('index.html')
     // win.openDevTools()
+    return win
 }
 
 app.whenReady().then(() => 
@@ -73,16 +71,22 @@ app.whenReady().then(() =>
         const file = fs.readFileSync('./' + lang + '.yml', 'utf8')
         return YAML.parse(file)
     })
+
+    let win = null
+
+    // APP
+    ipcMain.handle('app.close', () => 
+    {
+        app.quit()
+    })
+
+    ipcMain.handle('app.minimize', () => 
+    {
+        win.minimize()
+    })
     
     
-    createWindow()
-    // app.on('activate', () => 
-    // {
-    //     if (BrowserWindow.getAllWindows().length === 0) 
-    //     {
-    //         createWindow()
-    //     }
-    // })
+    win = createWindow()
 })
 
 app.on('window-all-closed', () => 
