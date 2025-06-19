@@ -19,3 +19,7 @@ contextBridge.exposeInMainWorld('app',
     close: () => ipcRenderer.invoke('app.close'),
     minimize: () => ipcRenderer.invoke('app.minimize')
 })
+
+contextBridge.exposeInMainWorld('serialport_service', {
+    open: (serialport) => ipcRenderer.invoke('serialport.open', {serialport})
+})

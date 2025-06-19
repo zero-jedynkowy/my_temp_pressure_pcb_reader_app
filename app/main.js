@@ -5,6 +5,8 @@ let settings = require('electron-settings');
 const YAML = require('yaml')
 var fs = require('fs')
 
+let port = null
+
 const createWindow = () => 
 {
     const win = new BrowserWindow(
@@ -13,7 +15,7 @@ const createWindow = () =>
         height: 600,
         titleBarStyle: 'hidden',
         frame: false,
-        resizable: false,
+        // resizable: false,
         transparent: true,
         webPreferences: 
         {
@@ -21,7 +23,7 @@ const createWindow = () =>
         }
     })
     win.loadFile('index.html')
-    // win.openDevTools()
+    win.openDevTools()
     return win
 }
 
@@ -84,7 +86,31 @@ app.whenReady().then(() =>
     {
         win.minimize()
     })
+
+    //SERIALPORT
+    ipcMain.handle('serialport.open', (event, {serialport}) => 
+    {
+        try
+        {
+            port = new SerialPort({path: serialport, baudRate: 115200 }, function (err) 
+            {
+                if (err)
+                {
+                    return false
+                }
+            })
+            return true
+        }
+        catch(error)
+        {
+            return false
+        }
+    })
     
+    ipcMain.handle('serialport.write', (event, {message}) => 
+    {
+
+    })
     
     win = createWindow()
 })

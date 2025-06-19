@@ -1,3 +1,4 @@
+//OTHERS
 const mySettings = 
 {
     async init()
@@ -138,7 +139,7 @@ const mySwitch =
         let switchReg = switchUI.getBoundingClientRect()
         let optionReg = optionUI.getBoundingClientRect()
         let rightOffset = switchReg.right - optionReg.right
-        //console.log(option)
+        ////console.log(option)
         switchUI.querySelector('.switchThumb').style.right = rightOffset + 'px'
     },
     init()
@@ -147,7 +148,7 @@ const mySwitch =
         {
             element.addEventListener('click', (e) => 
             {
-                //console.log(element.id)
+                ////console.log(element.id)
                 if(e.target.classList.contains('switchOption'))
                 {
                     mySwitch.switchChange("#" + element.id, e.target.dataset.option)
@@ -159,18 +160,35 @@ const mySwitch =
     }
 }
 
+//TOP BAR BTNS
 document.querySelector('#minimizeAppBtn').addEventListener('click', window.app.minimize)
 document.querySelector('#closeAppBtn').addEventListener('click', window.app.close)
 
+//SET UP ALL DIALOGS
+document.querySelectorAll('.dialog').forEach(element => 
+{
+    element.addEventListener('click', (e) => 
+    {
+        if(e.target.classList.contains('closeDialogBtn'))
+        {
+            element.classList.toggle('open')
+        }
+    })
+});
 
+function showDialog(id)
+{
+    document.querySelector(id).classList.toggle('open')
+}
 
-
+//DEVICE CONNECTING
 const mySerialportService = 
 {
     refreshListFlag: true,
     ui:
     {
-        serialportList: null
+        serialportList: null,
+        connectBtn: null,
     },
     init()
     {
@@ -201,7 +219,6 @@ const mySerialportService =
         obj.innerText = name
         return obj
     },
-
     async refreshList()
     {
         //NEW
@@ -209,7 +226,6 @@ const mySerialportService =
         let newListId = newList.map((x) => x.pnpId.replaceAll(`\\`, '-'))
 
         //OLD
-        console.log('', this.ui.serialportList)
         let oldList = this.ui.serialportList.querySelectorAll('.serialport')   
         
         let oldListId = []
@@ -218,9 +234,6 @@ const mySerialportService =
         {
             oldListId = Array.from(oldList).map((x) => x.dataset.id)
         }
-        // //console.log(oldListId.includes('2'))
-        console.log(oldListId)
-        console.log(newListId)
 
         //IS THERE A NEW DEVICE WHICH IS NOT ON THE UI LIST?
         newListId.forEach(element => 
@@ -240,14 +253,41 @@ const mySerialportService =
             }
         });
     
+        //DOES THE APP STILL NEED TO REFRESH LIST?
         if(this.refreshListFlag)
         {
             setTimeout(() => mySerialportService.refreshList(), 1000)
         }
-        //console.log('ss')
     }
 }
 
+document.querySelector('#aboutBtn').addEventListener('click', () => {showDialog('#aboutDialog')})
+
+document.querySelector('#connectingBtn').addEventListener('click', () => 
+{
+    let deviceStr = document.querySelector('.marked')
+    if(deviceStr != null)
+    {
+        deviceStr = deviceStr.innerHTML
+        showDialog('#connectingDialog')
+        setTimeout(async () => 
+        {
+            let result = await window.serialport_service.open(deviceStr)
+            if(result)
+            {
+                showDialog('#connectingDialog')
+            }
+            else
+            {
+
+            }
+        }, 2000)
+    }
+    else
+    {
+        showDialog('#notChoosenDialog')
+    }
+})
 
 
 
@@ -260,9 +300,7 @@ const mySerialportService =
 
 
 
-
-
-
+//FINAL RUN AND SET ALL THINGS AFTER LOAD THE UI
 window.onload = () => 
 {
     mySwitch.init()
@@ -270,85 +308,3 @@ window.onload = () =>
     mySerialportService.init()
     setTimeout(() => mySerialportService.refreshList(), 0)
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// let x = document.querySelectorAll('.switch')
-
-// x.forEach(element => 
-// {
-//     element.addEventListener('click', (e) => 
-//     {
-//         //console.log(e.target.classList.contains('switchOption'))
-//         if(e.target.classList.contains('switchOption'))
-//         {
-//             const parentRect = e.target.parentElement.getBoundingClientRect();
-//             const elementRect = e.target.getBoundingClientRect();
-//             const rightOffset = parentRect.right - elementRect.right;           
-//             //console.log(rightOffset, parentRect, elementRect)
-
-
-
-
-//             // //console.log(window.getComputedStyle(e.target).right)
-//             element.querySelector('.switchThumb').style.right = rightOffset + 'px'
-//         }
-//     })    
-// });
-
-
-
-// function serialportElement(path, pnpId)
-// {
-//     let temp = document.createElement('div')
-//     temp.classList.add('serialport', 'dark:text-white', 'text-black', 'bg-gray-400', 'text-[1.5rem]')
-//     temp.classList.add('dark:bg-gray-600', 'p-[1rem]', 'mr-[1rem]', 'overflow-x-auto', 'text-nowrap', 'flex-shrink-0', 'rounded-md')
-//     temp.innerHTML = path
-//     temp.dataset.id = pnpId
-//     return temp
-// }
-
-
-// let serialportList = document.querySelector('#serialportList')
-
-// async function refresh()
-// {
-//     let newList = await window.serialport.list()
-//     let oldList = serialportList.querySelector('serialport').map((x) => x.dataset.id)
-//     //console.log(oldList)
-
-//     temp.forEach(element => 
-//     {
-//         serialportList.appendChild(serialportElement(element.path, element.pnpId))
-//         // //console.log(element.path)
-//         // //console.log(element.pnpId)
-//     });
-
-//     setTimeout(refresh, 0);
-// }
-
-
-
-
-//end
-
