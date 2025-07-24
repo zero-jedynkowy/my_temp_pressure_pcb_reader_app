@@ -1,118 +1,90 @@
-const {app, BrowserWindow, ipcMain, systemPreferences, nativeTheme} = require('electron/main')
+const { ipcMain } = require('electron')
+const { app, BrowserWindow } = require('electron/main')
 const path = require('node:path')
-const { SerialPort } = require('serialport') 
-let settings = require('electron-settings');
-const YAML = require('yaml')
-var fs = require('fs')
+const {SerialPort} = require('serialport')
+const { InterByteTimeoutParser } = require('@serialport/parser-inter-byte-timeout')
 
+let currentWindow = null
 let port = null
+let parser = null
 
-const createWindow = () => 
+function createWindow() 
 {
-    const win = new BrowserWindow(
+    currentWindow = new BrowserWindow(
     {
         width: 700,
         height: 600,
-        titleBarStyle: 'hidden',
         frame: false,
-        // resizable: false,
         transparent: true,
+        icon: './resources/logo.png',
         webPreferences: 
         {
             preload: path.join(__dirname, 'preload.js')
         }
     })
-    win.loadFile('index.html')
-    win.openDevTools()
-    return win
+    currentWindow.loadFile('index.html')
+    // currentWindow.openDevTools()
 }
 
 app.whenReady().then(() => 
 {
-    // SERIALPORT
-    ipcMain.handle('serialport.list', () =>
+    //IPC
+    ipcMain.handle('app.minimize', () => 
     {
-        return SerialPort.list()
-    })
-    
-    // SETTINGS
-    ipcMain.handle('settings.hasSync', (event, {id}) => 
-    {
-        console.log(id)
-        return settings.hasSync()
+        // currentWindow.webContents.send('connecting.receivingData', 'zbyszek')
+        currentWindow.minimize()
     })
 
-    ipcMain.handle('settings.getSync', (event, {id}) => 
-    {
-        return settings.getSync()
-    })
-
-    ipcMain.handle('settings.setSync', (event, {val}) => 
-    {
-        console.log(val)
-        return settings.setSync(val)
-    })
-
-    ipcMain.handle('settings.isDarkMode', () => 
-    {
-        let isDarkMode = null
-        if (process.platform === 'darwin') 
-        {
-            isDarkMode = systemPreferences.isDarkMode()
-            console.log('Ciemny motyw:', isDarkMode)
-        }
-        else
-        {
-            isDarkMode = nativeTheme.shouldUseDarkColors
-        }
-        return isDarkMode
-    })
-
-    ipcMain.handle('settings.loadLanguage', (event, {lang}) => 
-    {
-        const file = fs.readFileSync('./' + lang + '.yml', 'utf8')
-        return YAML.parse(file)
-    })
-
-    let win = null
-
-    // APP
     ipcMain.handle('app.close', () => 
     {
         app.quit()
     })
 
-    ipcMain.handle('app.minimize', () => 
+    ipcMain.handle('connecting.list', () => 
     {
-        win.minimize()
+        return SerialPort.list()
     })
 
-    //SERIALPORT
-    ipcMain.handle('serialport.open', (event, {serialport}) => 
+    ipcMain.handle('connecting.createConnection', async (event, portName) => 
     {
         try
         {
-            port = new SerialPort({path: serialport, baudRate: 115200 }, function (err) 
+            port = await new SerialPort({path: portName, baudRate: 115200}, (err) => {return err})
+            parser = port.pipe(new InterByteTimeoutParser({ interval: 30 }))
+            parser.on('data', (data) => 
             {
-                if (err)
-                {
-                    return false
-                }
+                currentWindow.webContents.send('connecting.receivingData', data.toString())
             })
-            return true
         }
-        catch(error)
+        catch(e)
         {
             return false
         }
     })
-    
-    ipcMain.handle('serialport.write', (event, {message}) => 
-    {
 
+
+    ipcMain.handle('connecting.write', (event, message) => 
+    {
+        try
+        {
+            port.write(message)
+            return true
+        }
+        catch(e)
+        {
+            return false
+        }
     })
-    
-    win = createWindow()
+
+    //OTHERS
+    createWindow()
+    app.on('activate', () => 
+    {
+        if (BrowserWindow.getAllWindows().length === 0) 
+        {
+            createWindow()
+        }
+    })
 })
 
 app.on('window-all-closed', () => 

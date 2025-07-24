@@ -1,189 +1,155 @@
 <!DOCTYPE html>
-<html class="dark">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'"/>
-        <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"/>
-        <title>TempPress App</title>
-        <link rel="stylesheet" href="main.css"/>
-        <link rel="stylesheet" href="node_modules/bootstrap-icons/font/bootstrap-icons.min.css"/>
-        <link rel="stylesheet" href="node_modules/@fontsource/montserrat/400.css"/>
-        <link rel="stylesheet" href="tailwind.css"/>
-    </head>
-    <body class="w-[100vw] h-[100vh] font-['Montserrat'] bg-transparent rounded-md">
-        <!-- CONTAINER -->
-        <div class="w-[100vw] h-[100%] flex flex-col dark:bg-gray-700 rounded-lg bg-white" id="container">
-            <!-- TOP BAR -->
-            <div class="z-[50] flex flex-row w-full dark:bg-gray-700  bg-white text-[1.1rem] dark:text-white border-b-[1px] border-gray-500 text-black rounded-xl rounded-b-none" id="topBar">
-                <div class="w-full"></div>
-                <div class="w-full text-center p-[0.5rem]" data-lang="0">TempPress App</div>
-                <div class="w-full flex flex-row justify-end">
-                    <i class="bi bi-dash-lg p-[0.5rem]" id="minimizeAppBtn"></i>
-                    <i class="bi bi-x-lg p-[0.5rem] bg-red-500 rounded-tr-lg" id="closeAppBtn"></i>
-                </div>
-            </div>
-            <!-- CONTENT -->
-            <div class="h-[100%] w-full p-[2rem] overflow-y-auto relative" id="content">
-                
-
-                <div class="dialog" id="aboutDialog">
-                    <div class="dialogContainer dark:bg-gray-700 dark:text-white bg-white text-black rounded-md">
-                        <div class="dialogTopBar"></div>
-                        <div class="dialogContent pt-[0] text-nowrap">
-                            <div class="dialogTopBar relative text-center border-b-[1px] border-gray-500">
-                                <div class="p-[0.5rem]">About</div>
-                                <i class="closeDialogBtn bi bi-x-lg p-[0.5rem] bg-red-500 rounded-tr-lg absolute top-0 right-0 z-[100]"></i>
-                            </div>
-                            <div class="p-[1rem]">
-                                <div class="">App name: TempPress</div>
-                                <div class="">Author: Karol Ambroziński</div>
-                                <div class="">Font: Montserrat</div>
-                                <div class="">Used tools:</div>
-                                <ul class="list-disc list-inside">
-                                    <li>Bootstrap Icon</li>
-                                    <li>serialport.io</li>
-                                    <li>Tailwind CSS</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="dialog" id="notChoosenDialog">
-                    <div class="dialogContainer dark:bg-gray-700 dark:text-white bg-white text-black rounded-md">
-                        <div class="dialogTopBar"></div>
-                        <div class="dialogContent pt-[0] text-nowrap">
-                            <div class="dialogTopBar relative text-center border-b-[1px] border-gray-500">
-                                <div class="p-[0.5rem]">Error</div>
-                                <i class="closeDialogBtn bi bi-x-lg p-[0.5rem] bg-red-500 rounded-tr-lg absolute top-0 right-0 z-[100]"></i>
-                            </div>
-                            <div class="p-[1rem]">
-                                <div class="">The device isn't choosen!</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="dialog" id="connectingDialog">
-                    <div class="dialogContainer dark:bg-gray-700 dark:text-white bg-white text-black rounded-md">
-                        <div class="dialogTopBar"></div>
-                        <div class="dialogContent pt-[0] text-nowrap">
-                            <div class="p-[1rem] text-[2rem] font-bold pr-[3rem] pl-[3rem]">
-                                <div class="">Connecting...</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- CONNECTING PANEL -->
-                <div class="flex flex-col w-full h-[1000px] gap-[2rem] dark:text-white text-black" id="connectingPanel">
-                    <div class="text-[2.5rem] leading-[2.5rem] h-[2.5rem]" data-lang="1">Connect to the device</div>
-                    <div class="flex flex-row h-full gap-[1rem]">
-                        <div class=" w-[60%] flex flex-col gap-[1rem] h-full">
-                            <div class="w-full h-[26.5rem] rounded-lg dark:bg-gray-800 bg-gray-300 p-[1rem]">
-                               <div class="h-full overflow-y-scroll w-full gap-[1rem] flex flex-col" id="serialportList">
-                                    <!-- <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md" data-id="2">COM8</div>
-                                    <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div>
-                                    <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div>
-                                    <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div>
-                                    <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div>
-                                    <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div>
-                                    <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div>
-                                    <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div>
-                                    <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div>
-                                    <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div>
-                                    <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div>
-                                    <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div>
-                                    <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div>
-                                    <div class="serialport dark:text-white text-black bg-gray-400 text-[1.5rem] dark:bg-gray-600 p-[1rem] mr-[1rem] overflow-x-auto text-nowrap flex-shrink-0 rounded-md">COM8</div> -->
-                                </div>
-                            </div>
-                        </div>
-                        <div class="w-[40%] h-full gap-[1rem] flex flex-col">
-                            <button class="bg-green-400 text-black w-full text-center text-[1.25rem] p-[1rem] rounded-md font-bold" data-lang="2" id="connectingBtn">Connect</button>
-                            <!-- <button class="bg-blue-600 text-white w-full text-center text-[1.25rem] p-[1rem] rounded-md font-bold">Refresh</button> -->
-                            <button class="bg-blue-800 text-white w-full text-center text-[1.25rem] p-[1rem] rounded-md font-bold" data-lang="3" id="aboutBtn">About</button>
-                            <div class="text-[1.25rem]" data-lang="4">Theme</div>
-                            <div class="switch dark:bg-gray-600 bg-gray-300 w-full flex flex-row before:content-[''] dark:text-white text-black relative rounded-lg" id="themeSwitch">
-                                <div class="switchThumb w-[calc(100%*1/3)] dark:bg-gray-800 bg-gray-400 absolute h-full rounded-lg"></div>
-                                <div class="switchOption w-[100%] text-center z-[2] pt-[1rem] pb-[1rem]" data-option="system">System</div>
-                                <div class="switchOption w-[100%] text-center z-[2] pt-[1rem] pb-[1rem]" data-option="dark" data-lang="5">Dark</div>
-                                <div class="switchOption w-[100%] text-center z-[2] pt-[1rem] pb-[1rem]" data-option="light" data-lang="6">Light</div>
-                            </div>
-                            <div class="text-[1.25rem]" data-lang="7">Language</div>
-                            <div class="switch dark:bg-gray-600 bg-gray-300 w-full flex flex-row before:content-[''] dark:text-white text-black relative rounded-lg" id="languageSwitch">
-                                <div class="switchThumb w-[calc(100%*1/2)] dark:bg-gray-800 bg-gray-400 absolute h-full rounded-lg"></div>
-                                <div class="switchOption w-[100%] text-center z-[2] pt-[1rem] pb-[1rem]" data-option="pl">PL</div>
-                                <div class="switchOption w-[100%] text-center z-[2] pt-[1rem] pb-[1rem]" data-option="eng">ENG</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- DEVICE PANEL -->
-                <!-- <div class="flex flex-col w-full h-full gap-[2rem] text-white mb-[2rem]" id="devicePanel">
-                    <div class="text-[2.5rem] leading-[2.5rem] h-[2.5rem]">Device panel</div>
-                    <div class="flex flex-col gap-[1rem]">
-                        <div class="flex flex-row gap-[1rem]">
-                            <div class="bg-green-300 flex flex-col w-full text-black p-[1rem] rounded-lg">
-                                <div class="w-full text-center text-[1.5rem]">Temperature</div>
-                                <div class="flex flex-row justify-center text-[2.5rem] font-bold">
-                                    <div class="">2</div>
-                                    <div class="">2</div>
-                                    <div class="">.</div>
-                                    <div class="">2</div>
-                                    <div class="">2</div>
-                                    <div class="">&nbsp;&deg;C</div>
-                                </div>
-                            </div>
-                            <div class="bg-red-400 flex flex-col w-full p-[1rem] rounded-lg text-black">
-                                <div class="w-full text-center text-[1.5rem]">Pressure</div>
-                                <div class="flex flex-row justify-center text-[2.5rem] font-bold">
-                                    <div class="">1</div>
-                                    <div class="">0</div>
-                                    <div class="">0</div>
-                                    <div class="">0</div>
-                                    <div class="">.</div>
-                                    <div class="">2</div>
-                                    <div class="">2</div>
-                                    <div class="">&nbsp;hPa</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="bg-indigo-500 flex flex-col w-full p-[1rem] rounded-lg text-black gap-[1rem]">
-                            <div class="text-[1.5rem]">PWM Settings</div>
-                            <div class="flex flex-row gap-[1rem]">
-                                <div class="w-full flex-col flex gap-[1rem]">
-                                    <div class="font-bold">PWM Frequency</div>
-                                    <div class="text-[2rem]">20000 Hz</div>
-                                    <input type="range" class="slider bg-white">
-                                </div>
-                                <div class="w-full flex-col flex gap-[1rem]">
-                                    <div class="font-bold">PWM Duty</div>
-                                    <div class="text-[2rem]">100 %</div>
-                                    <input type="range" class="slider bg-white">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="bg-orange- flex flex-col w-full p-[1rem] rounded-lg text-black gap-[1rem] mb-[2rem]">
-                            <div class="text-[1.5rem]">PWM Settings</div>
-                            <div class="flex flex-row gap-[1rem]">
-                                <div class="w-full flex-col flex gap-[1rem]">
-                                    <div class="font-bold">PWM Frequency</div>
-                                    <div class="text-[2rem]">20000 Hz</div>
-                                    <input type="range" class="slider bg-white">
-                                </div>
-                                <div class="w-full flex-col flex gap-[1rem]">
-                                    <div class="font-bold">PWM Duty</div>
-                                    <div class="text-[2rem]">100 %</div>
-                                    <input type="range" class="slider bg-white">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>TempPress App</title>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+    <link rel="stylesheet" href="node_modules/@fontsource/poppins/400.css">
+    <link rel="stylesheet" href="./main.css">
+    <link rel="stylesheet" href="node_modules/bootstrap-icons/font/bootstrap-icons.min.css">
+</head>
+<body class="dark">
+    <div id="container">
+        <!-- TOP BAR -->
+        <div id="topBar">
+            <!-- TITLE -->
+            <div id="topBarTitle">TempPress App</div>
+            <div id="topBarBtns">
+                <!-- MINIMIZE THE APP -->
+                <div id="minimizeAppBtn" class="bi bi-dash-lg"></div>
+                <!-- CLOSE THE APP -->
+                <div id="closeAppBtn" class="bi bi-x-lg"></div>
             </div>
         </div>
-    </body>
-    <script src="./node_modules/chart.js/dist/chart.umd.min.js"></script>
-    <script src="./renderer.js"></script>
+
+        <!-- CONTENT -->
+        <div id="content">
+            <!-- SUB CONTENT -->
+            <div id="subcontent">
+                <!-- CONNECTING DEVICE -->
+                <div class="panel fadeIn" id="connectingPanel">
+                    <div class="panelContent">
+                        <div class="panelTitle">Connect a device</div>
+                        <div class="panelSubcontent">
+                            <div class="row w100 h100 gap1">
+                                <div id="connectingPanelList">
+                                    <div>
+                                        <div>
+                                            <!-- <div class="device">COM8</div>
+                                            <div class="device marked">COM8</div>
+                                            <div class="device">COM8</div>
+                                            <div class="device">COM8</div>
+                                            <div class="device">COM8</div>
+                                            <div class="device">COM8</div>
+                                            <div class="device">COM8</div>
+                                            <div class="device">COM8</div>
+                                            <div class="device">COM8</div> -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="connectingPanelBtns" class="gap1 col">
+                                    <button class="btn bgGreen fwBold" id="connectBtn">Connect</button>
+                                    <button class="btn bgBlue fwBold" id="aboutBtn">About</button>
+                                    <div class="switchHorizontal w100">
+                                        <div class="switcher"></div>
+                                        <div class="option" id="plLangBtn">PL</div>
+                                        <div class="option" id="engLangBtn">ENG</div>
+                                    </div>
+                                    <div class="switchVertical">
+                                        <div class="switcher"></div>
+                                        <div class="option" id="systemThemeBtn">System</div>
+                                        <div class="option" id="darkThemeBtn">Dark</div>
+                                        <div class="option" id="lightThemeBtn">Light</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DEVICE PANEL -->
+                <div class="panel hidden" id="devicePanel">
+                    <div class="panelContent">
+                        <div class="panelTitle">Device panel</div>
+                        <div class="panelSubcontent">
+                            <div class="col gap1">
+                                <div class="row gap1">
+                                    <!-- TEMPERATURE SECTION -->
+                                    <div class="col bgGreen w100 padding1 bRad0_5 gap1 textAlignCenter">
+                                        <div class="fs2">Temperature</div>
+                                        <div class="row fs2_5 justifyContentCenter fwBold">
+                                            <div id="tempHolder">-23.32</div>
+                                            <div>&nbsp;&deg;C</div>
+                                        </div>
+                                    </div>
+                                    <!-- PRESSURE SECTION -->
+                                    <div class="col bgBlue w100 padding1 bRad0_5 gap1 textAlignCenter">
+                                        <div class="fs2">Pressure</div>
+                                        <div class="row fs2_5 justifyContentCenter fwBold">
+                                            <div id="pressHolder">1231.00</div>
+                                            <div>&nbsp;hPa</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row gap1">
+                                    <!-- LED SWITCH -->
+                                    <div class="row w100 bRad0_5" id="ledSwitch">
+                                        <div id="ledSwitchLabel">LED</div>
+                                        <div class="row" id="ledSwitchContent">
+                                            <div class="ledSwitchThumb"></div>
+                                            <div class="option" id="tempLedSwitch">Temperature</div>
+                                            <div class="option" id="pressLedSwitch">Pressure</div>
+                                        </div>
+                                    </div>
+                                    <!-- DISCONNECT BUTTON -->
+                                    <button class="btn bgRed fwBold" id="disconnectBtn">Disconnect</button>
+                                </div>
+                                <!-- PWM SETTINGS -->
+                                <div class="col gap1 bgCoral padding1 bRad0_5">
+                                    <div class="fs2">PWM Settings</div>
+                                    <div class="col gap1">
+                                        <div class="fs1_5">Frequency [Hz]</div>
+                                        <div class="row gap1">
+                                            <input type="range" id="pwmFreqRange" class="w70 textAlignCenter" min="1" max="100" value="1" step="1"/>
+                                            <div class="fs2_5 w30 textAlignCenter">100 Hz</div>
+                                        </div>
+                                        <div class="fs1_5">Duty [%]</div>
+                                        <div class="row gap1 w100">
+                                            <input type="range" id="pwmDutyRange" class="w70 textAlignCenter" min="1" max="100" value="1" step="1"/>
+                                            <div class="fs2_5 w30 textAlignCenter">100 %</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- LED SETTINGS -->
+                                <!-- <div class="col gap1 bgPinkRed padding1 bRad0_5">
+                                    <div class="fs2">LED Settings</div>
+                                    <div class="col gap1">
+                                        <div class="fs1_5">Temperature step [&deg;C]</div>
+                                        <div class="row gap1">
+                                            <input type="range" id="tempStepRange" class="w100 textAlignCenter" min="1" max="100" value="1" step="1"/>
+                                            <div class="row fs2_5 w100 textAlignCenter justifyContentCenter">
+                                                <div>30</div>
+                                                <div>&nbsp;&deg;C</div>
+                                            </div>
+                                        </div>
+                                        <div class="fs1_5">Pressure step [hPa]</div>
+                                        <div class="row gap1 w100">
+                                            <input type="range" id="pressStepRange" class="w100 textAlignCenter" min="1" max="100" value="1" step="1"/>
+                                            <div class="row fs2_5 w100 textAlignCenter justifyContentCenter">
+                                                <div>500</div>
+                                                <div>&nbsp;hPa</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <div style="height: 1rem;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="renderer.js"></script>
+</body>
 </html>

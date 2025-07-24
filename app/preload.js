@@ -1,25 +1,22 @@
-const { contextBridge,  ipcRenderer} = require('electron/renderer')
+const {contextBridge, ipcRenderer} = require('electron')
 
-contextBridge.exposeInMainWorld('serialport', 
-{
-    list: () => ipcRenderer.invoke('serialport.list')
-})
-
-contextBridge.exposeInMainWorld('settings', 
-{
-    hasSync: (id) => ipcRenderer.invoke('settings.hasSync', {id}),
-    getSync: (id) => ipcRenderer.invoke('settings.getSync', {id}),
-    setSync: (val) => ipcRenderer.invoke('settings.setSync', {val}),
-    isDarkMode: () => ipcRenderer.invoke('settings.isDarkMode'),
-    loadLanguage: (lang) => ipcRenderer.invoke('settings.loadLanguage', {lang}),
+contextBridge.exposeInMainWorld('electronAPI', {
+  onUpdateCounter: (callback) => ipcRenderer.on('update-counter', (_event, value) => callback(value)),
+  counterValue: (value) => ipcRenderer.send('counter-value', value)
 })
 
 contextBridge.exposeInMainWorld('app', 
 {
-    close: () => ipcRenderer.invoke('app.close'),
-    minimize: () => ipcRenderer.invoke('app.minimize')
+  minimize: () => ipcRenderer.invoke('app.minimize'),
+  close: () => ipcRenderer.invoke('app.close')
 })
 
-contextBridge.exposeInMainWorld('serialport_service', {
-    open: (serialport) => ipcRenderer.invoke('serialport.open', {serialport})
+contextBridge.exposeInMainWorld('connecting', 
+{
+  list: () => ipcRenderer.invoke('connecting.list'),
+  createConnection: (port) => ipcRenderer.invoke('connecting.createConnection', port),
+  write: (message) => ipcRenderer.invoke('connecting.write', message),
+
+
+  receivingData: (callback) => ipcRenderer.on('connecting.receivingData', (_event, value) => callback(value)),
 })

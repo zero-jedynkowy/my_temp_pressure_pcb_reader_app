@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "App for reading temperature and pressure from the custom PCB ",
   "main": "main.js",
-  "scripts": {
+  "scripts": 
+  {
     "start": "electron .",
-    "test": "\"echo \\\"Error: no test specified\\\" && exit 1\"",
-    "css": "npx @tailwindcss/cli -i ./styles.css -o ./output.css --watch"
+    "make": "electron-forge make",
+    "test": "\"echo \\\"Error: no test specified\\\" && exit 1\""
   },
   "keywords": [
     "temperature",
@@ -16,10 +17,16 @@
   ],
   "author": "Karol Ambroziński",
   "license": "MIT",
-  "devDependencies": {
+  "devDependencies": 
+  {
+    "@electron-forge/cli": "^7.8.1",
+    "@electron-forge/maker-deb": "^7.8.1",
+    "@electron-forge/maker-squirrel": "^7.8.1",
+    "@electron-forge/maker-zip": "^7.8.1",
     "electron": "^36.4.0"
   },
   "dependencies": {
+    "@electron-forge/maker-rpm": "^7.8.1",
     "@fontsource/montserrat": "^5.2.6",
     "@fontsource/open-sans": "^5.2.5",
     "@fontsource/poppins": "^5.2.6",
@@ -28,9 +35,17 @@
     "bootstrap-icons": "^1.13.1",
     "chart.js": "^4.5.0",
     "electron-settings": "^4.0.4",
+    "google-protobuf": "^3.21.4",
+    "jquery": "^3.7.1",
     "material-icons": "^1.13.14",
     "serialport": "^13.0.0",
     "tailwindcss": "^4.1.8",
     "yaml": "^2.8.0"
+  },
+  "build": {
+    "win": {
+      "icon": "resources/logo.ico",
+      "target": "squirrel"
+    }
   }
 }
