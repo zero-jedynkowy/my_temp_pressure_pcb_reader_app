@@ -16,6 +16,7 @@ function createWindow()
         height: 600,
         frame: false,
         transparent: true,
+        // resizable: false,
         icon: './resources/logo.png',
         webPreferences: 
         {
@@ -23,7 +24,7 @@ function createWindow()
         }
     })
     currentWindow.loadFile('index.html')
-    // currentWindow.openDevTools()
+    currentWindow.openDevTools()
 }
 
 app.whenReady().then(() => 
@@ -31,7 +32,6 @@ app.whenReady().then(() =>
     //IPC
     ipcMain.handle('app.minimize', () => 
     {
-        // currentWindow.webContents.send('connecting.receivingData', 'zbyszek')
         currentWindow.minimize()
     })
 
@@ -42,19 +42,65 @@ app.whenReady().then(() =>
 
     ipcMain.handle('connecting.list', () => 
     {
-        return SerialPort.list()
+        try
+        {
+            return SerialPort.list()
+        }
+        catch(e)
+        {
+            return []
+        }
     })
 
     ipcMain.handle('connecting.createConnection', async (event, portName) => 
     {
         try
         {
-            port = await new SerialPort({path: portName, baudRate: 115200}, (err) => {return err})
+            port = await new SerialPort({path: portName, baudRate: 115200}, (err) => 
+            {
+                if(err == null)
+                {
+                    currentWindow.webContents.send('connecting.isOpen', true)
+                }
+                else
+                {
+                    currentWindow.webContents.send('connecting.isOpen', false)
+                }
+                
+            })
             parser = port.pipe(new InterByteTimeoutParser({ interval: 30 }))
             parser.on('data', (data) => 
             {
                 currentWindow.webContents.send('connecting.receivingData', data.toString())
             })
+            port.on('close', (e) => 
+            {
+                currentWindow.webContents.send('connecting.disconnectingDevice')
+            })
+            port.on('error', (e) => 
+            {
+                currentWindow.webContents.send('connecting.disconnectingDevice')
+            })
+        }
+        catch(e)
+        {
+            currentWindow.webContents.send('connecting.isOpen', false)
+            return false
+        }
+    })
+
+    ipcMain.handle('connecting.write', (event, message) => 
+    {
+        try
+        {
+            port.write(message, (err) => 
+            {
+                if(err != null)
+                {
+                    
+                }
+            })
+            return true
         }
         catch(e)
         {
@@ -62,17 +108,15 @@ app.whenReady().then(() =>
         }
     })
 
-
-    ipcMain.handle('connecting.write', (event, message) => 
+    ipcMain.handle('connecting.close', () => 
     {
         try
         {
-            port.write(message)
-            return true
+            port.close()
         }
         catch(e)
         {
-            return false
+
         }
     })
 

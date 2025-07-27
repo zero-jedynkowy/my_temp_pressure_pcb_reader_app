@@ -20,7 +20,12 @@
   --dark-switchHorizontal-bg: #454545;
   --dark-switcher-bg: black;
   --dark-switchVertical-bg: #454545;
-  
+  --dark-dialog-bg: #1414149d;
+  --dark-dialogContent-bg: #111417;
+  --dark-dialogTopBar-bg: #323232;
+  --dark-scrollbar-track-bg: #4a4a4a;
+  --dark-scrollbar-thumb-border: #131313;
+  --dark-scrollbar-thumb-bg: #131313;
 
   /* light */
   --light-topBar-bg: #bcbcbc;
@@ -33,17 +38,27 @@
   --light-switchHorizontal-bg: #b1b1b1;
   --light-switcher-bg: #858585;
   --light-switchVertical-bg: #b1b1b1;
-  
+  --light-modal-bg: #e9e9e99d;
+  --light-dialog-bg: #ffffff92;
+  --light-dialogContent-bg: #c8c8c8;
+  --light-dialogTopBar-bg: #bcbcbc;
+  --light-scrollbar-track-bg: white;
+  --light-scrollbar-thumb-border: #bcbcbc;
+  --light-scrollbar-thumb-bg: #bcbcbc;
+
+
   /* colors */
   /* dark */
   --dark-topBar-color: white;
   --dark-container-color: white;
   --dark-device-color: white;
-
+  --dark-dialog-color: white;
+ 
   /* light */
   --light-topBar-color: black;
   --light-container-color: black;
   --light-device-color: black;
+  --light-dialog-color: black;
 }
 
 .light
@@ -85,6 +100,7 @@ html, body
   border-radius: 0.5rem 0.5rem 0 0;
   font-size: 1.1rem;
   app-region: drag;
+  z-index: 200;
 }
 
 #topBarTitle
@@ -235,7 +251,7 @@ html, body
   position: absolute;
   margin: 1rem;
   width: calc(100% - 2rem);
-  overflow-y: auto;
+  overflow-y: scroll;
 }
 
 #connectingPanelList > div > div
@@ -467,9 +483,6 @@ html, body
   transition: left 0.5s ease-in-out;
 }
 
-
-
-
 /* RANGE */
 input[type="range"] 
 {
@@ -501,6 +514,175 @@ input[type="range"]::-webkit-slider-thumb
   height: 2rem;
   width: 2rem;
 }
+
+/* SCROLL */
+*::-webkit-scrollbar
+{
+  width: 1.5rem;
+}
+
+*::-webkit-scrollbar-track
+{
+  background: light-dark(var(--light-scrollbar-track-bg), var(--dark-scrollbar-track-bg));
+  border-radius: 0.2rem;
+}
+
+*::-webkit-scrollbar-thumb
+{
+  background-color: light-dark(var(--light-scrollbar-thumb-bg), var(--dark-scrollbar-thumb-bg));
+  border-radius: 0.25rem;
+  border: 0.25rem solid light-dark(var(--light-scrollbar-thumb-bg), var(--dark-scrollbar-thumb-bg));
+  width: 2rem;
+}
+
+
+/* MODAL WINDOW */
+@keyframes dialogFadeInAnimation 
+{
+  0% 
+  {
+    opacity: 0;
+  }
+
+  100% 
+  {
+    opacity: 1;
+  }
+}
+
+@keyframes dialogFadeOutAnimation 
+{
+  0% 
+  {
+    opacity: 1;
+  }
+
+  100% 
+  {
+    opacity: 0;
+  }
+}
+
+@keyframes dialogContentFadeInAnimation 
+{
+  0% 
+  {
+    margin-top: -500px;
+  }
+
+  100% 
+  {
+    margin-top: 50px;
+  }
+}
+
+@keyframes dialogContentFadeOutAnimation 
+{
+  0% 
+  {
+    margin-top: 50px;
+  }
+
+  100% 
+  {
+    margin-top: -500px;
+  }
+}
+
+.dialog
+{
+  background-color: light-dark(var(--light-dialog-bg), var(--dark-dialog-bg));
+  backdrop-filter: blur(10px);
+  position: absolute;
+  height: calc(100% - 2.1rem);
+  width: 100%;
+  z-index: 100;
+  border-radius: 0 0 1rem 1rem;
+  opacity: 0;
+  color: light-dark(var(--light-dialog-color), var(--dark-dialog-color));
+}
+
+.dialogContent
+{
+  background-color: light-dark(var(--light-dialogContent-bg), var(--dark-dialogContent-bg));
+  width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 1rem;
+  margin-top: -500px;
+}
+
+.dialogTopBar
+{
+  text-align: center;
+  position: relative;
+  width: 100%;
+  background-color: light-dark(var(--light-dialogTopBar-bg), var(--dark-dialogTopBar-bg));
+  border-radius: 1rem 1rem 0 0;
+}
+
+.dialogTopBarTitle
+{
+  padding: 0.5rem;
+  font-size: 1rem;
+  line-height: 1rem;
+  height: 1rem;
+  width: calc(100% - 1rem); 
+}
+
+.dialogTopBarClose
+{
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-color: red;
+  line-height: 1rem;
+  font-size: 1rem;
+  height: 1rem;
+  width: 1rem;
+  padding: 0.5rem;
+  border-radius: 0 1rem 0 0;
+  color: white;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.dialogTopBarClose:hover
+{
+  background-color: darkred;
+}
+
+.dialogSubcontent
+{
+  padding: 1rem;
+  font-size: 1.1rem;
+}
+
+.dialog.fadeOut
+{
+  animation: dialogFadeOutAnimation 0.5s ease-out  forwards;
+}
+
+.dialog.fadeOut > .dialogContent
+{
+  animation: dialogContentFadeOutAnimation 0.5s ease-out  forwards;
+}
+
+.dialog.fadeIn
+{
+  animation: dialogFadeInAnimation 0.5s ease-out  forwards;
+}
+
+.dialog.fadeIn > .dialogContent
+{
+    animation: dialogContentFadeInAnimation 0.5s ease-out  forwards;
+}
+
+
+
+
+
+
 
 /* OTHERS */
 .row

@@ -24,8 +24,74 @@
 
         <!-- CONTENT -->
         <div id="content">
+
+            <!-- DIALOGS -->
+            <div class="dialog hidden" id="aboutDialog">
+                <div class="dialogContent">
+                    <div class="dialogTopBar">
+                        <div class="dialogTopBarTitle">About the app</div>
+                        <div class="bi bi-x-lg dialogTopBarClose"></div>
+                    </div>
+                    <div class="dialogSubcontent">
+                        <div class="col">
+                            <div>App name: TempPress</div>
+                            <div>Author: Karol Ambroziński</div>
+                            <div>To create this program was used:</div>
+                            <ul>
+                                <li>Electron</li>
+                                <li>serialport.io</li>
+                                <li>Electron Forge</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dialog hidden" id="notChoosenDeviceDialog">
+                <div class="dialogContent">
+                    <div class="dialogTopBar">
+                        <div class="dialogTopBarTitle">Message</div>
+                        <div class="bi bi-x-lg dialogTopBarClose"></div>
+                    </div>
+                    <div class="dialogSubcontent">The device wasn't choosen.</div>
+                </div>
+            </div>
+
+            <div class="dialog hidden" id="connectingDialog">
+                <div class="dialogContent">
+                    <div class="dialogSubcontent">Connecting...</div>
+                </div>
+            </div>
+
+            <div class="dialog hidden" id="connectedDialog">
+                <div class="dialogContent">
+                    <div class="dialogSubcontent">Connected!</div>
+                </div>
+            </div>
+
+            <div class="dialog hidden" id="cantConnectDialog">
+                <div class="dialogContent">
+                    <div class="dialogTopBar">
+                        <div class="dialogTopBarTitle">Message</div>
+                        <div class="bi bi-x-lg dialogTopBarClose"></div>
+                    </div>
+                    <div class="dialogSubcontent">Can't connect to the device!</div>
+                </div>
+            </div>
+
+            <div class="dialog hidden" id="disconnectedDialog">
+                <div class="dialogContent">
+                    <div class="dialogTopBar">
+                        <div class="dialogTopBarTitle">Message</div>
+                        <div class="bi bi-x-lg dialogTopBarClose"></div>
+                    </div>
+                    <div class="dialogSubcontent">The device is disconnected!</div>
+                </div>
+            </div>
+
             <!-- SUB CONTENT -->
             <div id="subcontent">
+
                 <!-- CONNECTING DEVICE -->
                 <div class="panel fadeIn" id="connectingPanel">
                     <div class="panelContent">
@@ -35,9 +101,9 @@
                                 <div id="connectingPanelList">
                                     <div>
                                         <div>
+                                            <!-- <div class="device fadeIn" data-id="COM5">COM5</div>
+                                            <div class="device fadeIn" data-id="COM8">COM8</div> -->
                                             <!-- <div class="device">COM8</div>
-                                            <div class="device marked">COM8</div>
-                                            <div class="device">COM8</div>
                                             <div class="device">COM8</div>
                                             <div class="device">COM8</div>
                                             <div class="device">COM8</div>
@@ -111,12 +177,18 @@
                                         <div class="fs1_5">Frequency [Hz]</div>
                                         <div class="row gap1">
                                             <input type="range" id="pwmFreqRange" class="w70 textAlignCenter" min="1" max="100" value="1" step="1"/>
-                                            <div class="fs2_5 w30 textAlignCenter">100 Hz</div>
+                                            <div class="fs2_5 w30 textAlignCenter row justifyContentCenter">
+                                                <div id="pwmFreqHolder">100</div>
+                                                <div>&nbsp;Hz</div>
+                                            </div>
                                         </div>
                                         <div class="fs1_5">Duty [%]</div>
                                         <div class="row gap1 w100">
                                             <input type="range" id="pwmDutyRange" class="w70 textAlignCenter" min="1" max="100" value="1" step="1"/>
-                                            <div class="fs2_5 w30 textAlignCenter">100 %</div>
+                                            <div class="fs2_5 w30 textAlignCenter row justifyContentCenter">
+                                                <div id="pwmDutyHolder">100</div>
+                                                <div>&nbsp;%</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

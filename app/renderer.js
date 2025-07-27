@@ -1,102 +1,8 @@
-
-
-
-
-
-
-// //CONNECTING, DISCONNECTING AND COMMUNICATION
-
-
-// //LED SWITCH
-function updateLedSwitch(state)
-{
-    let leftElement = null
-    let leftParent = document.querySelector('#ledSwitchContent').getBoundingClientRect().left
-
-    if(state == 'temp')
-    {
-        leftElement = document.querySelector('#tempLedSwitch').getBoundingClientRect().left
-    }
-    else if(state == 'press')
-    {
-        leftElement = document.querySelector('#pressLedSwitch').getBoundingClientRect().left
-    }
-    let left = leftElement - leftParent
-    document.querySelector('#ledSwitchContent').querySelector('.ledSwitchThumb').style.left = left + "px"
-}
-
-// document.querySelector('#connectBtn').addEventListener('click', (e) => 
-// {
-//     document.querySelector('#connectingPanel').addEventListener('animationend', (e) => 
-//     {
-//         document.querySelector('#connectingPanel').classList.add('hidden')
-//         document.querySelector('#devicePanel').classList.remove('hidden')
-//         document.querySelector('#devicePanel').classList.add('fadeIn')
-//     }, {once: true})
-
-//     document.querySelector('#connectingPanel').classList.add('fadeOut')
-//     document.querySelector('#connectingPanel').classList.remove('fadeIn') 
-// })
-
-// document.querySelector('#disconnectBtn').addEventListener('click', () => 
-// {
-//     document.querySelector('#devicePanel').addEventListener('animationend', (e) => 
-//     {
-//         document.querySelector('#devicePanel').classList.add('hidden')
-//         document.querySelector('#connectingPanel').classList.remove('hidden')
-//         document.querySelector('#connectingPanel').classList.add('fadeIn')
-//     }, {once: true})
-
-//     document.querySelector('#devicePanel').classList.add('fadeOut')
-//     document.querySelector('#devicePanel').classList.remove('fadeIn')
-// })
-
-// function createDevice()
-// {
-//     let temp = document.createElement('div')
-//     temp.classList.add('device')
-// }
-
-// let connectingList = document.querySelector('#connectingPanelList div div')
-
-// connectingList.addEventListener('click', (e) => 
-// {
-//     if(e.target.classList.contains('device'))
-//     {
-//         console.log('sss')
-//     }
-// })
-
-// async function updateConnectingPanelList()
-// {
-//     let newList = await window.connecting.list()
-//     newList = newList.map((x) => {return [x.path, x.friendlyName]})
-    
-
-//     setTimeout(() => {updateConnectingPanelList()}, 1000)
-// }
-
-
-
-
-// //GENERAL
-// document.addEventListener("DOMContentLoaded", () => 
-// {
-//     initSwitchesHorizontal()
-//     initSwitchesVertical()
-//     initThemes()
-//     initTopBar()
-// });
-
-
-// function createDevice(port)
-// {
-//     let temp = document.createElement('div')
-//     temp.classList.add('device')
-//     temp.classList.add('fadeIn')
-//     temp.innerHTML = port
-//     document.querySelector('#connectingPanelList div div').appendChild(temp)
-// }
+//VARIABLES
+let connectingList = null
+let firstConnection = true
+let settingsObj = {cmd:2}
+let doesItNeedChangeDeviceSettings = false
 
 //TOP BAR
 function initTopBar()
@@ -110,6 +16,47 @@ function initTopBar()
     {
         window.app.close()
     })
+}
+
+//DIALOG
+function openDialog(id)
+{
+    let temp = document.querySelector(id)
+    temp.classList.remove('hidden')
+    temp.classList.add('fadeIn')
+}
+
+function closeDialog(id)
+{
+    let temp = document.querySelector(id)
+    temp.classList.add('fadeOut')
+    temp.classList.remove('fadeIn')
+}
+
+function initDialogs()
+{
+    document.querySelectorAll('.dialog').forEach(element => 
+    {
+        element.addEventListener('animationend', (e) =>
+        {
+            if(e.animationName == 'dialogContentFadeOutAnimation')
+            {
+                e.target.parentElement.classList.add('hidden')
+            }
+        })
+    });
+
+    document.querySelectorAll('.dialog').forEach(element => 
+    {
+        element.addEventListener('click', (e) =>
+        {
+            console.log(e)
+            if(e.target.classList.contains('dialogTopBarClose'))
+            {
+                closeDialog("#" + e.target.parentElement.parentElement.parentElement.id)
+            }
+        })
+    });
 }
 
 //VERTICAL SWITCHES
@@ -192,21 +139,56 @@ function initThemes()
 function createDevice(id)
 {
     let result = document.createElement('div')
-    // let idUI = document.createElement('div')
-    
     result.innerHTML = id
-
-    // result.appendChild(idUI)
     result.dataset.id = id
     result.classList.add('device')
     result.classList.add('fadeIn')
-
     return result
 }
 
 //REFRESHING THE DEVICES LIST
-let connectingList = document.querySelector('#connectingPanelList div div')
-let refreshingListLoopFlag = true
+function initRefreshingList()
+{
+    connectingList = document.querySelector('#connectingPanelList div div')
+
+    //PERMANENT DELETE THE DEVICE FROM THE LIST
+    connectingList.addEventListener('animationend', (e) => 
+    {
+        if(e.animationName == 'deviceFadeOutAnimation' 
+        && e.target.classList.contains('device'))
+        {
+            e.target.remove()
+        }
+    })
+
+    //MARKING THE DEVICE ON THE LIST
+    connectingList.addEventListener('click', (e) => 
+    {
+        if(e.target.classList.contains('device'))
+        {
+            if(e.target.classList.contains('marked'))
+            {
+                e.target.classList.remove('marked')
+            }
+            else
+            {
+                let isThisExist = connectingList.querySelector('.device.marked')
+                
+                if(isThisExist != null)
+                {
+                    isThisExist.classList.remove('marked')
+                    e.target.classList.add('marked')
+                }
+                else
+                {
+                    e.target.classList.add('marked')
+                }
+            }
+        }
+    })
+}
+
+//REFRESHING THE DEVICES LIST UPDATER LOOP
 async function refreshDeviceList()
 {
     let newList = await window.connecting.list()
@@ -228,80 +210,181 @@ async function refreshDeviceList()
        document.querySelector(`.device[data-id="${element}"]`).classList.add('fadeOut')
     });
 
-    if(refreshingListLoopFlag)
+    setTimeout(() => {refreshDeviceList()}, 1)
+}
+
+//ABOUT THE PROGRAMME BUTTON
+function initAboutButton()
+{
+    document.querySelector('#aboutBtn').addEventListener('click', () => 
     {
-        setTimeout(() => {refreshDeviceList()}, 1000)
+        openDialog('#aboutDialog')
+    })
+}
+
+//INIT PWM RANGE SLIDERS
+function initPwmSettings()
+{
+    document.querySelector('#pwmFreqRange').addEventListener('input', (e) => 
+    {
+        settingsObj.pwmFreq = Number.parseInt(e.target.value)
+        doesItNeedChangeDeviceSettings = true
+    })
+
+    document.querySelector('#pwmDutyRange').addEventListener('input', (e) => 
+    {
+        settingsObj.pwmDuty = Number.parseInt(e.target.value)
+        doesItNeedChangeDeviceSettings = true
+    })
+}
+
+//LED SWITCH
+function updateLedSwitch(state)
+{
+    let leftElement = null
+    let leftParent = document.querySelector('#ledSwitchContent').getBoundingClientRect().left
+
+    if(state == 'temp')
+    {
+        leftElement = document.querySelector('#tempLedSwitch').getBoundingClientRect().left
+    }
+    else if(state == 'press')
+    {
+        leftElement = document.querySelector('#pressLedSwitch').getBoundingClientRect().left
+    }
+    let left = leftElement - leftParent
+    document.querySelector('#ledSwitchContent').querySelector('.ledSwitchThumb').style.left = left + "px"
+}
+
+//CHECKING IS THE DEVICE CONNECTED
+function isItConnected()
+{
+    closeDialog('#connectingDialog')
+    if(!firstConnection)
+    {
+        openDialog('#connectedDialog')
+        setTimeout(() => {closeDialog('#connectedDialog')}, 1000)
+        document.querySelector('#connectingPanel').addEventListener('animationend', (e) => 
+        {
+            document.querySelector('#connectingPanel').classList.add('hidden')
+            document.querySelector('#devicePanel').classList.remove('hidden')
+            document.querySelector('#devicePanel').classList.add('fadeIn')
+        }, {once: true})
+        document.querySelector('#connectingPanel').classList.add('fadeOut')
+        document.querySelector('#connectingPanel').classList.remove('fadeIn')
+    }
+    else
+    {
+        openDialog('#cantConnectDialog')
     }
 }
 
-//PERMANENT DELETE THE DEVICE FROM THE LIST
-connectingList.addEventListener('animationend', (e) => 
+//INIT THE COMMUNICATION
+function initCommunication()
 {
-    if(e.animationName == 'deviceFadeOutAnimation' 
-    && e.target.classList.contains('device'))
+    //CONNECT BUTTON
+    document.querySelector('#connectBtn').addEventListener('click', () => 
     {
-        e.target.remove()
-    }
-})
-
-//MARKING THE DEVICE ON THE LIST
-connectingList.addEventListener('click', (e) => 
-{
-    if(e.target.classList.contains('device'))
-    {
-        if(e.target.classList.contains('marked'))
+        let device = document.querySelector('.device.marked')
+        let status = null
+        if(device == null)
         {
-            e.target.classList.remove('marked')
+            openDialog("#notChoosenDeviceDialog")
+            return
+        }
+        openDialog("#connectingDialog")
+        setTimeout(async () => 
+        {
+            firstConnection = true
+            device = device.dataset.id
+            window.connecting.createConnection(device)
+        }, 2000)
+    })
+
+    //DISCONNECT BUTTON
+    document.querySelector('#disconnectBtn').addEventListener('click', () => 
+    {
+        window.connecting.close()
+    })
+
+    //IS PORT OPEN
+    window.connecting.isOpen(async (value) => 
+    {
+        if(true)
+        {
+            //CHANGING PANEL
+            await window.connecting.write('{"cmd":1}')
+            setTimeout(isItConnected, 1000)
         }
         else
         {
-            let isThisExist = connectingList.querySelector('.device.marked')
-            
-            if(isThisExist != null)
+            openDialog('#cantConnectDialog')
+        }
+    })
+
+    //PROCESS RECEIVED DATA
+    window.connecting.receivingData((value) => 
+    {
+        try
+        {
+            let obj = JSON.parse(value)
+            if(firstConnection)
             {
-                isThisExist.classList.remove('marked')
-                e.target.classList.add('marked')
+                document.querySelector('#pwmFreqRange').value = obj.pwmFreq
+                document.querySelector('#pwmDutyRange').value = obj.pwmDuty
+                firstConnection = false
+            }
+
+            //TEMP VALUE
+            document.querySelector('#tempHolder').innerHTML = obj.temp.toFixed(2)
+
+            //PRESS VALUE
+            document.querySelector('#pressHolder').innerHTML = obj.press.toFixed(2)
+
+            //PWM
+            document.querySelector('#pwmFreqHolder').innerHTML = obj.pwmFreq
+            document.querySelector('#pwmDutyHolder').innerHTML = obj.pwmDuty
+
+            //LED SWITCH
+            if(obj.ledSwitch == 0)
+            {
+                updateLedSwitch('temp')
             }
             else
             {
-                e.target.classList.add('marked')
+                updateLedSwitch('press')
             }
+            
         }
-    }
-})
+        catch(e)
+        {}
 
-//CONNECT BUTTON
-document.querySelector('#connectBtn').addEventListener('click', async (e) => 
-{
-    let device = document.querySelector('.device.marked')
-    let status = null
-    if(device == null)
+        //SET DATA TO SEND
+        message = null
+        if(doesItNeedChangeDeviceSettings)
+        {
+            settingsObj.cmd = 2
+            message = JSON.stringify(settingsObj)
+            doesItNeedChangeDeviceSettings = false
+            settingsObj = {}
+        }
+        else
+        {
+            message = '{"cmd":1}'
+        }
+        setTimeout(() => {window.connecting.write(message)}, 1)
+    })
+
+    //IT HAPPENS WHEN THE DEVICE IS DISCONNECTED
+    window.connecting.disconnectingDevice(() => 
     {
-        return
-    }
-    device = device.dataset.id
-    status = await window.connecting.createConnection(device)
-    
-    await window.connecting.write('{"cmd":1}')
+        openDialog('#disconnectedDialog')
+        disconnectingAndChangingPanels()
+    })
+}
 
-
-
-
-
-    //CHANGING PANEL
-    document.querySelector('#connectingPanel').addEventListener('animationend', (e) => 
-    {
-        document.querySelector('#connectingPanel').classList.add('hidden')
-        document.querySelector('#devicePanel').classList.remove('hidden')
-        document.querySelector('#devicePanel').classList.add('fadeIn')
-    }, {once: true})
-
-    document.querySelector('#connectingPanel').classList.add('fadeOut')
-    document.querySelector('#connectingPanel').classList.remove('fadeIn')
-})
-
-//DISCONNECT BUTTON
-document.querySelector('#disconnectBtn').addEventListener('click', () => 
+//DISCONNECTING CHANGING PANELS
+function disconnectingAndChangingPanels()
 {
     //CHANGING PANEL
     document.querySelector('#devicePanel').addEventListener('animationend', (e) => 
@@ -313,7 +396,7 @@ document.querySelector('#disconnectBtn').addEventListener('click', () =>
 
     document.querySelector('#devicePanel').classList.add('fadeOut')
     document.querySelector('#devicePanel').classList.remove('fadeIn')
-})
+}
 
 //GENERAL
 document.addEventListener("DOMContentLoaded", () => 
@@ -322,40 +405,14 @@ document.addEventListener("DOMContentLoaded", () =>
     initSwitchesHorizontal()
     initSwitchesVertical()
     initThemes()
+    initDialogs()
+    initAboutButton()
+    initCommunication()
+    initPwmSettings()
+    initRefreshingList()
 
-    refreshDeviceList()
-    
+    setTimeout(() => {refreshDeviceList()}, 1000) 
 });
 
 
 
-
-window.connecting.receivingData((value) => 
-{
-    try
-    {
-        //GENERAL
-        let obj = JSON.parse(value)
-        //TEMP VALUE
-        document.querySelector('#tempHolder').innerHTML = obj.temp.toFixed(2)
-
-        //PRESS VALUE
-        document.querySelector('#pressHolder').innerHTML = obj.press.toFixed(2)
-
-        //LED SWITCH
-        if(obj.ledSwitch == 0)
-        {
-            updateLedSwitch('temp')
-        }
-        else
-        {
-            updateLedSwitch('press')
-        }
-        
-    }
-    catch(e)
-    {
-
-    }
-    setTimeout(() => {window.connecting.write('{"cmd":1}')}, 200)
-})
