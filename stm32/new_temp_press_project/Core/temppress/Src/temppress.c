@@ -12,7 +12,7 @@ static void fillValueInt(lwjson_t * lwjson, char * key, uint16_t * value)
 	}
 }
 
-static void fillValueFloat(lwjson_t * lwjson, char * key, float * value)
+static void fillValue(lwjson_t * lwjson, char * key, float * value)
 {
 	const lwjson_token_t* token;
 	if((token = lwjson_find(lwjson, key)) != NULL)
@@ -20,6 +20,10 @@ static void fillValueFloat(lwjson_t * lwjson, char * key, float * value)
 		if(token->type == LWJSON_TYPE_NUM_REAL)
 		{
 			*value = token->u.num_real;
+		}
+		else if(token->type == LWJSON_TYPE_NUM_INT)
+		{
+			*value = token->u.num_int;
 		}
 	}
 }
@@ -45,10 +49,10 @@ void TempPress_Loop(TempPress* dev)
 						}
 						else if(cmd->u.num_int == 2) //SET_DATA
 						{
-							fillValueFloat(&lwjson, "tempStep", &dev->tempStep);
-							fillValueFloat(&lwjson, "pressStep", &dev->pressStep);
-							fillValueFloat(&lwjson, "tempMin", &dev->tempMin);
-							fillValueFloat(&lwjson, "pressMin", &dev->pressMin);
+							fillValue(&lwjson, "tempStep", &dev->tempStep);
+							fillValue(&lwjson, "pressStep", &dev->pressStep);
+							fillValue(&lwjson, "tempMin", &dev->tempMin);
+							fillValue(&lwjson, "pressMin", &dev->pressMin);
 							fillValueInt(&lwjson, "pwmFreq", &dev->pwmFreq);
 							fillValueInt(&lwjson, "pwmDuty", &dev->pwmDuty);
 							TempPress_UpdatePWM(dev->pwmFreq, dev->pwmDuty);

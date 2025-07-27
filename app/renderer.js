@@ -238,6 +238,42 @@ function initPwmSettings()
     })
 }
 
+//INIT TEMP RANGE SLIDERS
+function initTempSettings()
+{
+    document.querySelector('#tempMinRange').addEventListener('input', (e) => 
+    {
+        settingsObj.tempMin = Number.parseFloat(e.target.value)
+        doesItNeedChangeDeviceSettings = true
+        console.log(settingsObj)
+    })
+
+    document.querySelector('#tempStepRange').addEventListener('input', (e) => 
+    {
+        settingsObj.tempStep = Number.parseFloat(e.target.value)
+        doesItNeedChangeDeviceSettings = true
+        console.log(settingsObj)
+    })
+}
+
+//INIT PRESS RANGE SLIDERS
+function initPressSettings()
+{
+    document.querySelector('#pressMinRange').addEventListener('input', (e) => 
+    {
+        settingsObj.pressMin = Number.parseFloat(e.target.value)
+        doesItNeedChangeDeviceSettings = true
+        console.log(settingsObj)
+    })
+
+    document.querySelector('#pressStepRange').addEventListener('input', (e) => 
+    {
+        settingsObj.pressStep = Number.parseFloat(e.target.value)
+        doesItNeedChangeDeviceSettings = true
+        console.log(settingsObj)
+    })
+}
+
 //LED SWITCH
 function updateLedSwitch(state)
 {
@@ -310,7 +346,7 @@ function initCommunication()
     //IS PORT OPEN
     window.connecting.isOpen(async (value) => 
     {
-        if(true)
+        if(value)
         {
             //CHANGING PANEL
             await window.connecting.write('{"cmd":1}')
@@ -332,6 +368,10 @@ function initCommunication()
             {
                 document.querySelector('#pwmFreqRange').value = obj.pwmFreq
                 document.querySelector('#pwmDutyRange').value = obj.pwmDuty
+                document.querySelector("#tempMinRange").value = obj.tempMin.toFixed(2)
+                document.querySelector('#tempStepHolder').value = obj.tempStep.toFixed(2)
+                document.querySelector("#pressMinRange").value = obj.pressMin.toFixed(2)
+                document.querySelector('#pressStepRange').value = obj.pressStep.toFixed(2)
                 firstConnection = false
             }
 
@@ -345,6 +385,14 @@ function initCommunication()
             document.querySelector('#pwmFreqHolder').innerHTML = obj.pwmFreq
             document.querySelector('#pwmDutyHolder').innerHTML = obj.pwmDuty
 
+            //TEMP SETTINGS
+            document.querySelector('#tempMinHolder').innerHTML = obj.tempMin
+            document.querySelector('#tempStepHolder').innerHTML = obj.tempStep
+
+            //PRESS SETTINGS
+            document.querySelector('#pressMinHolder').innerHTML = obj.pressMin
+            document.querySelector('#pressStepHolder').innerHTML = obj.pressStep
+
             //LED SWITCH
             if(obj.ledSwitch == 0)
             {
@@ -354,11 +402,10 @@ function initCommunication()
             {
                 updateLedSwitch('press')
             }
-            
         }
         catch(e)
         {}
-
+        
         //SET DATA TO SEND
         message = null
         if(doesItNeedChangeDeviceSettings)
@@ -409,6 +456,8 @@ document.addEventListener("DOMContentLoaded", () =>
     initAboutButton()
     initCommunication()
     initPwmSettings()
+    initTempSettings()
+    initPressSettings()
     initRefreshingList()
 
     setTimeout(() => {refreshDeviceList()}, 1000) 

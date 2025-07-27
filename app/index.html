@@ -193,27 +193,43 @@
                                     </div>
                                 </div>
                                 <!-- LED SETTINGS -->
-                                <!-- <div class="col gap1 bgPinkRed padding1 bRad0_5">
+                                <div class="col gap1 bgPinkRed padding1 bRad0_5">
                                     <div class="fs2">LED Settings</div>
                                     <div class="col gap1">
+                                        <div class="fs1_5">Temperature min. [&deg;C]</div>
+                                        <div class="row gap1">
+                                            <input type="range" id="tempMinRange" class="w100 textAlignCenter" min="-30" max="30" value="1" step="1"/>
+                                            <div class="row fs2_5 w100 textAlignCenter justifyContentCenter">
+                                                <div id="tempMinHolder">30</div>
+                                                <div>&nbsp;&deg;C</div>
+                                            </div>
+                                        </div>
                                         <div class="fs1_5">Temperature step [&deg;C]</div>
                                         <div class="row gap1">
-                                            <input type="range" id="tempStepRange" class="w100 textAlignCenter" min="1" max="100" value="1" step="1"/>
+                                            <input type="range" id="tempStepRange" class="w100 textAlignCenter" min="1" max="30" value="1" step="1"/>
                                             <div class="row fs2_5 w100 textAlignCenter justifyContentCenter">
-                                                <div>30</div>
+                                                <div id="tempStepHolder">30</div>
                                                 <div>&nbsp;&deg;C</div>
+                                            </div>
+                                        </div>
+                                        <div class="fs1_5">Pressure min. [hPa]</div>
+                                        <div class="row gap1 w100">
+                                            <input type="range" id="pressMinRange" class="w100 textAlignCenter" min="1" max="1000" value="1" step="1"/>
+                                            <div class="row fs2_5 w100 textAlignCenter justifyContentCenter">
+                                                <div id="pressMinHolder">500</div>
+                                                <div>&nbsp;hPa</div>
                                             </div>
                                         </div>
                                         <div class="fs1_5">Pressure step [hPa]</div>
                                         <div class="row gap1 w100">
-                                            <input type="range" id="pressStepRange" class="w100 textAlignCenter" min="1" max="100" value="1" step="1"/>
+                                            <input type="range" id="pressStepRange" class="w100 textAlignCenter" min="1" max="1000" value="1" step="1"/>
                                             <div class="row fs2_5 w100 textAlignCenter justifyContentCenter">
-                                                <div>500</div>
+                                                <div id="pressStepHolder">500</div>
                                                 <div>&nbsp;hPa</div>
                                             </div>
                                         </div>
                                     </div>
-                                </div> -->
+                                </div>
                                 <div style="height: 1rem;"></div>
                             </div>
                         </div>
