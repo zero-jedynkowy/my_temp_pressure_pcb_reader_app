@@ -50,7 +50,6 @@ function initDialogs()
     {
         element.addEventListener('click', (e) =>
         {
-            console.log(e)
             if(e.target.classList.contains('dialogTopBarClose'))
             {
                 closeDialog("#" + e.target.parentElement.parentElement.parentElement.id)
@@ -67,7 +66,6 @@ function initSwitchesVertical()
     {
         element.addEventListener('click', (e) => 
         {
-            console.log(e.target.classList.contains('option'))
             if(e.target.classList.contains('option'))
             {
                 let topElement = e.target.getBoundingClientRect().top;
@@ -87,7 +85,6 @@ function initSwitchesHorizontal()
     {
         element.addEventListener('click', (e) => 
         {
-            console.log(e.target.classList.contains('option'))
             if(e.target.classList.contains('option'))
             {
                 let leftElement = e.target.getBoundingClientRect().left;
@@ -112,6 +109,7 @@ function initThemes()
         {
             document.querySelector('body').classList.remove('dark')
         }
+        window.settings.set('settings.theme', 'system')
     })
 
     document.querySelector('#darkThemeBtn').addEventListener('click', () => 
@@ -121,6 +119,7 @@ function initThemes()
             document.querySelector('body').classList.remove('light')
         }
         document.querySelector('body').classList.add('dark')
+        window.settings.set('settings.theme', 'dark')
     })
 
     document.querySelector('#lightThemeBtn').addEventListener('click', () => 
@@ -130,6 +129,28 @@ function initThemes()
             document.querySelector('body').classList.remove('dark')
         }
         document.querySelector('body').classList.add('light')
+        window.settings.set('settings.theme', 'light')
+    })
+}
+
+//LANG
+function loadLang(lang)
+{
+    filePath = lang + ".json"
+}
+
+function initLang()
+{
+    document.querySelector("#engLangBtn").addEventListener('click', (e) => 
+    {
+        window.settings.set('settings.language', 'eng')
+        loadLang('eng')
+    })
+
+    document.querySelector("#plLangBtn").addEventListener('click', (e) => 
+    {
+        window.settings.set('settings.language', 'pl')
+        loadLang('pl')
     })
 }
 
@@ -245,14 +266,12 @@ function initTempSettings()
     {
         settingsObj.tempMin = Number.parseFloat(e.target.value)
         doesItNeedChangeDeviceSettings = true
-        console.log(settingsObj)
     })
 
     document.querySelector('#tempStepRange').addEventListener('input', (e) => 
     {
         settingsObj.tempStep = Number.parseFloat(e.target.value)
         doesItNeedChangeDeviceSettings = true
-        console.log(settingsObj)
     })
 }
 
@@ -263,14 +282,12 @@ function initPressSettings()
     {
         settingsObj.pressMin = Number.parseFloat(e.target.value)
         doesItNeedChangeDeviceSettings = true
-        console.log(settingsObj)
     })
 
     document.querySelector('#pressStepRange').addEventListener('input', (e) => 
     {
         settingsObj.pressStep = Number.parseFloat(e.target.value)
         doesItNeedChangeDeviceSettings = true
-        console.log(settingsObj)
     })
 }
 
@@ -354,6 +371,7 @@ function initCommunication()
         }
         else
         {
+            closeDialog('#connectingDialog')
             openDialog('#cantConnectDialog')
         }
     })
@@ -405,7 +423,7 @@ function initCommunication()
         }
         catch(e)
         {}
-        
+
         //SET DATA TO SEND
         message = null
         if(doesItNeedChangeDeviceSettings)
@@ -445,23 +463,80 @@ function disconnectingAndChangingPanels()
     document.querySelector('#devicePanel').classList.remove('fadeIn')
 }
 
+//SETTINGS
+async function initSettings()
+{
+    let language, theme, isItExist;
+
+    //CHECK SETTINGS
+    isItExist = await window.settings.has('settings.language')
+    if(isItExist)
+    {
+        language = await window.settings.get('settings.language')
+    }
+    else
+    {
+        await window.settings.set('settings.language', 'eng')
+    }
+
+    isItExist = await window.settings.has('settings.theme')
+    if(isItExist)
+    {
+        theme = await window.settings.get('settings.theme')
+    }
+    else
+    {
+        await window.settings.set('settings.theme', 'system')
+    }
+
+    //APPLY SETTINGS
+    switch(theme)
+    {
+        case 'system':
+            document.querySelector('#systemThemeBtn').click()
+            break;
+        case 'dark':
+            document.querySelector('#darkThemeBtn').click()
+            break;
+        case 'light':
+            document.querySelector('#lightThemeBtn').click()
+            break;
+        default:
+            document.querySelector("#systemThemeBtn").click()
+            break;
+    }
+    switch(language)
+    {
+        case 'eng':
+            document.querySelector("#engLangBtn").click()
+            break;
+        case 'pl':
+            document.querySelector("#plLangBtn").click()
+            break;
+        default:
+            document.querySelector("#engLangBtn").click()
+            break;
+    }
+}
+
+
 //GENERAL
-document.addEventListener("DOMContentLoaded", () => 
+document.addEventListener("DOMContentLoaded", async () => 
 {
     initTopBar()
     initSwitchesHorizontal()
     initSwitchesVertical()
     initThemes()
+    initLang()
     initDialogs()
+    await initSettings()
     initAboutButton()
     initCommunication()
     initPwmSettings()
     initTempSettings()
     initPressSettings()
     initRefreshingList()
+    
 
     setTimeout(() => {refreshDeviceList()}, 1000) 
 });
-
-
-

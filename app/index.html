@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>TempPress App</title>
-    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+     <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
     <link rel="stylesheet" href="node_modules/@fontsource/poppins/400.css">
     <link rel="stylesheet" href="./main.css">
     <link rel="stylesheet" href="node_modules/bootstrap-icons/font/bootstrap-icons.min.css">
@@ -230,6 +230,10 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <!-- TEMP CHART -->
+                                <canvas id="tempChart"></canvas>
+
                                 <div style="height: 1rem;"></div>
                             </div>
                         </div>
@@ -238,6 +242,8 @@
             </div>
         </div>
     </div>
+
+    <script src="./node_modules/chart.js/dist/chart.umd.min.js"></script>
     <script src="renderer.js"></script>
 </body>
 </html>

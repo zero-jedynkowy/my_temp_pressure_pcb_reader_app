@@ -3,7 +3,9 @@ const { app, BrowserWindow } = require('electron/main')
 const path = require('node:path')
 const {SerialPort} = require('serialport')
 const { InterByteTimeoutParser } = require('@serialport/parser-inter-byte-timeout')
+const {Chart} = require('chart.js/auto')
 
+let settings = null
 let currentWindow = null
 let port = null
 let parser = null
@@ -25,6 +27,7 @@ function createWindow()
     })
     currentWindow.loadFile('index.html')
     currentWindow.openDevTools()
+    settings = require('electron-settings')
 }
 
 app.whenReady().then(() => 
@@ -37,6 +40,12 @@ app.whenReady().then(() =>
 
     ipcMain.handle('app.close', () => 
     {
+        if (port && port.isOpen) 
+        {
+            port.close();
+        }
+        port = null;
+        mainWindow = null;
         app.quit()
     })
 
@@ -93,13 +102,7 @@ app.whenReady().then(() =>
     {
         try
         {
-            port.write(message, (err) => 
-            {
-                if(err != null)
-                {
-                    
-                }
-            })
+            port.write(message)
             return true
         }
         catch(e)
@@ -118,6 +121,21 @@ app.whenReady().then(() =>
         {
 
         }
+    })
+
+    ipcMain.handle('settings.has', (event, name) => 
+    {
+        return settings.hasSync(name)
+    })
+
+    ipcMain.handle('settings.set', (event, name, value) => 
+    {
+        return settings.setSync(name, value)
+    })
+    
+    ipcMain.handle('settings.get', (event, name) => 
+    {
+        return settings.getSync(name)
     })
 
     //OTHERS
