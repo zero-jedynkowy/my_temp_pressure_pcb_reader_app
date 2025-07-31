@@ -18,7 +18,7 @@ function createWindow()
         height: 600,
         frame: false,
         transparent: true,
-        // resizable: false,
+        resizable: false,
         icon: './resources/logo.png',
         webPreferences: 
         {

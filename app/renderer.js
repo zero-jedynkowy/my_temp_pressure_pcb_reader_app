@@ -332,6 +332,165 @@ function isItConnected()
     }
 }
 
+//CHARTS
+Chart.defaults.font.family = 'Poppins'
+const range = (start, end) => [...Array(end - start + 1)].map((_, i) => start + i);
+const rangeDown = (start, end) => Array.from({ length: start - end + 1 }, (_, i) => start - i);
+
+//CHARTS OBJECTS
+let tempPressChart = 
+{
+    ui: null,
+    data: null,
+    config: {},
+    chart: null
+}
+
+//INITS OF THE CHARTS
+function initTempChart()
+{
+    tempPressChart.ui = document.querySelector("#tempPressChart")
+
+    tempPressChart.data = 
+    {
+        labels: rangeDown(300, 1),
+        datasets: 
+        [{
+            label: 'Temperature [°C]',
+            borderColor: '#36A2EB',
+            data: new Array(300).fill(0),
+            borderWidth: 1,
+            tension: 0.4,
+            pointStyle: false,
+            pointRadius: 0,
+        },
+        {
+                label: 'Pressure [hPa]',
+                borderColor: '#e04346',
+                data: new Array(300).fill(0),
+                borderWidth: 1,
+                tension: 0.4,
+                pointStyle: false,
+                pointRadius: 0,
+        }]
+    }
+
+    tempPressChart.config = 
+    {
+        type: 'line',
+        data: tempPressChart.data,
+        options: 
+        {
+            responsive: true,
+            plugins: 
+            {
+                title: 
+                {
+                    display: true,
+                    text: 'Temperature and pressure in last 5 minutes'
+                },
+            },
+            interaction: 
+            {
+                intersect: false,
+            },
+            scales: 
+            {
+                x: 
+                {
+                    display: true,
+                    title: 
+                    {
+                        display: true
+                    },
+                    ticks: 
+                    {
+                        callback: function(val, index) 
+                        {
+                            const showEveryN = 75; 
+                            // 300 danych / 4 etykiety = co 75
+                            if (index % showEveryN === 0 || index === 299) 
+                            { 
+                                // Pokazuj co 75 i ostatnią
+                                return this.getLabelForValue(val);
+                            }
+                            return null;
+                        },
+                        autoskip: false,
+                    },
+                    grid:
+                    {
+                        stepSize: 100
+                    }
+                },
+                y: 
+                {
+                    display: true,
+                    title: 
+                    {
+                        display: true,
+                        text: '' //Temperature [°C] and pressure [hPa]
+                    },
+                    suggestedMin: 20,
+                    suggestedMax: 40
+                }
+            }
+        },
+    }
+        
+    tempPressChart.chart = new Chart(tempPressChart.ui, tempPressChart.config)
+}
+
+let lastUpdate = Date.now()
+let currentIndex = 0
+let maxIndex = 299
+let minVal = [0, 0]
+let maxVal = [0, 0]
+let realMinVal = 0
+let realMaxVal = 0
+
+function updateChart(temp, press)
+{
+    if(Math.abs(Date.now() - lastUpdate) >= 1000)
+    {
+        lastUpdate = Date.now()
+
+        //TEMP
+        tempPressChart.data.datasets[0].data.push(temp)
+        tempPressChart.data.datasets[0].data.shift()
+        tempPressChart.data.datasets[1].data.push(press)
+        tempPressChart.data.datasets[1].data.shift()
+
+        minVal[0] = Math.min(...tempPressChart.data.datasets[0].data)
+        maxVal[0] = Math.max(...tempPressChart.data.datasets[0].data)
+        minVal[1] = Math.min(...tempPressChart.data.datasets[1].data)
+        maxVal[1] = Math.max(...tempPressChart.data.datasets[1].data)
+
+        if(tempPressChart.chart.isDatasetVisible(0) && !tempPressChart.chart.isDatasetVisible(1))
+        {
+            realMinVal = minVal[0]
+            realMaxVal = maxVal[0]
+            console.log('only press')
+        }
+        if(tempPressChart.chart.isDatasetVisible(1) && !tempPressChart.chart.isDatasetVisible(0))
+        {
+            realMinVal = minVal[1]
+            realMaxVal = maxVal[1]
+            console.log('only temp')
+        }
+        if(tempPressChart.chart.isDatasetVisible(0) && tempPressChart.chart.isDatasetVisible(1))
+        {
+            realMinVal = Math.min(minVal[0], minVal[1])
+            realMaxVal = Math.max(maxVal[0], maxVal[1])
+            console.log('both')
+        }
+        
+        tempPressChart.chart.config.options.scales.y.min = realMinVal - realMinVal * 0.2
+        tempPressChart.chart.config.options.scales.y.max =  realMaxVal + realMaxVal * 0.2
+        tempPressChart.chart.update();
+    }
+}
+
 //INIT THE COMMUNICATION
 function initCommunication()
 {
@@ -411,6 +570,9 @@ function initCommunication()
             document.querySelector('#pressMinHolder').innerHTML = obj.pressMin
             document.querySelector('#pressStepHolder').innerHTML = obj.pressStep
 
+            //UPDATE CHARTS
+            updateChart(parseFloat(obj.temp.toFixed(2)), parseFloat(obj.press.toFixed(2)))
+
             //LED SWITCH
             if(obj.ledSwitch == 0)
             {
@@ -422,7 +584,9 @@ function initCommunication()
             }
         }
         catch(e)
-        {}
+        {
+            console.log(e)
+        }
 
         //SET DATA TO SEND
         message = null
@@ -519,7 +683,6 @@ async function initSettings()
     }
 }
 
-
 //GENERAL
 document.addEventListener("DOMContentLoaded", async () => 
 {
@@ -536,6 +699,8 @@ document.addEventListener("DOMContentLoaded", async () =>
     initTempSettings()
     initPressSettings()
     initRefreshingList()
+    initTempChart()
+    // initPressChart()
     
 
     setTimeout(() => {refreshDeviceList()}, 1000) 
