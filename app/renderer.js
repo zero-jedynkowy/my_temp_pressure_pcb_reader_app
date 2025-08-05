@@ -343,7 +343,14 @@ let tempPressChart =
     ui: null,
     data: null,
     config: {},
-    chart: null
+    chart: null,
+    lastUpdate: Date.now(),
+    currentIndex: 0,
+    maxIndex: 300-1,
+    minVal: [0, 0],
+    maxVal: [0, 0],
+    realMinVal: 0,
+    realMaxVal: 0
 }
 
 //INITS OF THE CHARTS
@@ -353,25 +360,25 @@ function initTempChart()
 
     tempPressChart.data = 
     {
-        labels: rangeDown(300, 1),
+        labels: rangeDown(tempPressChart.maxIndex+1, 0),
         datasets: 
         [{
             label: 'Temperature [°C]',
             borderColor: '#36A2EB',
-            data: new Array(300).fill(0),
-            borderWidth: 1,
+            data: new Array(tempPressChart.maxIndex + 1).fill(0),
+            borderWidth: 2,
             tension: 0.4,
             pointStyle: false,
             pointRadius: 0,
         },
         {
-                label: 'Pressure [hPa]',
-                borderColor: '#e04346',
-                data: new Array(300).fill(0),
-                borderWidth: 1,
-                tension: 0.4,
-                pointStyle: false,
-                pointRadius: 0,
+            label: 'Pressure [hPa]',
+            borderColor: '#e04346',
+            data: new Array(tempPressChart.maxIndex + 1).fill(0),
+            borderWidth: 2,
+            tension: 0.4,
+            pointStyle: false,
+            pointRadius: 0,
         }]
     }
 
@@ -381,7 +388,23 @@ function initTempChart()
         data: tempPressChart.data,
         options: 
         {
+            responsiveAnimationDuration: 0,
+            datasets:
+            {
+                line:
+                {
+                    pointRadius: 0
+                }
+            },
+            elements:
+            {
+                point:
+                {
+                    radius: 0
+                }
+            },
             responsive: true,
+            animation: false,
             plugins: 
             {
                 title: 
@@ -389,6 +412,13 @@ function initTempChart()
                     display: true,
                     text: 'Temperature and pressure in last 5 minutes'
                 },
+                // animation: false,
+                decimation: 
+                {
+                    enabled: true,
+                    algorithm: 'lttb', // Lepszy do gładkich krzywych
+                    samples: 100,     // Maksymalna liczba punktów po redukcji
+                }
             },
             interaction: 
             {
@@ -398,6 +428,7 @@ function initTempChart()
             {
                 x: 
                 {
+                    // type: 'time',
                     display: true,
                     title: 
                     {
@@ -407,12 +438,25 @@ function initTempChart()
                     {
                         callback: function(val, index) 
                         {
-                            const showEveryN = 75; 
-                            // 300 danych / 4 etykiety = co 75
-                            if (index % showEveryN === 0 || index === 299) 
+                            const showEvery = 60; 
+                            if (index % showEvery === 0) 
                             { 
-                                // Pokazuj co 75 i ostatnią
-                                return this.getLabelForValue(val);
+                                switch(index / showEvery)
+                                {
+                                    case 5:
+                                        return 'Now';
+                                    case 4:
+                                        return '1 min';
+                                    case 3:
+                                        return '2 min';
+                                    case 2:
+                                        return '3 min';
+                                    case 1:
+                                        return '4 min';
+                                    case 0:
+                                        return '5 minutes ago';
+                                }
+                                // return this.getLabelForValue(val);
                             }
                             return null;
                         },
@@ -420,7 +464,7 @@ function initTempChart()
                     },
                     grid:
                     {
-                        stepSize: 100
+                        stepSize: 1
                     }
                 },
                 y: 
@@ -441,19 +485,12 @@ function initTempChart()
     tempPressChart.chart = new Chart(tempPressChart.ui, tempPressChart.config)
 }
 
-let lastUpdate = Date.now()
-let currentIndex = 0
-let maxIndex = 299
-let minVal = [0, 0]
-let maxVal = [0, 0]
-let realMinVal = 0
-let realMaxVal = 0
 
 function updateChart(temp, press)
 {
-    if(Math.abs(Date.now() - lastUpdate) >= 1000)
+    if(Math.abs(Date.now() - tempPressChart.lastUpdate) >= 1000)
     {
-        lastUpdate = Date.now()
+        tempPressChart.lastUpdate = Date.now()
 
         //TEMP
         tempPressChart.data.datasets[0].data.push(temp)
@@ -461,32 +498,32 @@ function updateChart(temp, press)
         tempPressChart.data.datasets[1].data.push(press)
         tempPressChart.data.datasets[1].data.shift()
 
-        minVal[0] = Math.min(...tempPressChart.data.datasets[0].data)
-        maxVal[0] = Math.max(...tempPressChart.data.datasets[0].data)
-        minVal[1] = Math.min(...tempPressChart.data.datasets[1].data)
-        maxVal[1] = Math.max(...tempPressChart.data.datasets[1].data)
+        // tempPressChart.minVal[0] = Math.min(...tempPressChart.data.datasets[0].data)
+        // tempPressChart.maxVal[0] = Math.max(...tempPressChart.data.datasets[0].data)
+        // tempPressChart.minVal[1] = Math.min(...tempPressChart.data.datasets[1].data)
+        // tempPressChart.maxVal[1] = Math.max(...tempPressChart.data.datasets[1].data)
 
-        if(tempPressChart.chart.isDatasetVisible(0) && !tempPressChart.chart.isDatasetVisible(1))
-        {
-            realMinVal = minVal[0]
-            realMaxVal = maxVal[0]
-            console.log('only press')
-        }
-        if(tempPressChart.chart.isDatasetVisible(1) && !tempPressChart.chart.isDatasetVisible(0))
-        {
-            realMinVal = minVal[1]
-            realMaxVal = maxVal[1]
-            console.log('only temp')
-        }
-        if(tempPressChart.chart.isDatasetVisible(0) && tempPressChart.chart.isDatasetVisible(1))
-        {
-            realMinVal = Math.min(minVal[0], minVal[1])
-            realMaxVal = Math.max(maxVal[0], maxVal[1])
-            console.log('both')
-        }
+        // if(tempPressChart.chart.isDatasetVisible(0) && !tempPressChart.chart.isDatasetVisible(1))
+        // {
+        //     tempPressChart.realMinVal = tempPressChart.minVal[0]
+        //     tempPressChart.realMaxVal = tempPressChart.maxVal[0]
+        //     console.log('only press')
+        // }
+        // if(tempPressChart.chart.isDatasetVisible(1) && !tempPressChart.chart.isDatasetVisible(0))
+        // {
+        //     tempPressChart.realMinVal = tempPressChart.minVal[1]
+        //     tempPressChart.realMaxVal = tempPressChart.maxVal[1]
+        //     console.log('only temp')
+        // }
+        // if(tempPressChart.chart.isDatasetVisible(0) && tempPressChart.chart.isDatasetVisible(1))
+        // {
+        //     tempPressChart.realMinVal = Math.min(tempPressChart.minVal[0], tempPressChart.minVal[1])
+        //     tempPressChart.realMaxVal = Math.max(tempPressChart.maxVal[0], tempPressChart.maxVal[1])
+        //     console.log('both')
+        // }
         
-        tempPressChart.chart.config.options.scales.y.min = realMinVal - realMinVal * 0.2
-        tempPressChart.chart.config.options.scales.y.max =  realMaxVal + realMaxVal * 0.2
+        // tempPressChart.chart.config.options.scales.y.min = tempPressChart.realMinVal - tempPressChart.realMinVal * 0.2
+        // tempPressChart.chart.config.options.scales.y.max =  tempPressChart.realMaxVal + tempPressChart.realMaxVal * 0.2
         tempPressChart.chart.update();
     }
 }

@@ -18,11 +18,12 @@ function createWindow()
         height: 600,
         frame: false,
         transparent: true,
-        resizable: false,
+        // resizable: false,
         icon: './resources/logo.png',
         webPreferences: 
         {
-            preload: path.join(__dirname, 'preload.js')
+            preload: path.join(__dirname, 'preload.js'),
+            nodeIntegrationInWorker: true
         }
     })
     currentWindow.loadFile('index.html')
