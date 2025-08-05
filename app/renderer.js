@@ -412,12 +412,11 @@ function initTempChart()
                     display: true,
                     text: 'Temperature and pressure in last 5 minutes'
                 },
-                // animation: false,
                 decimation: 
                 {
                     enabled: true,
                     algorithm: 'lttb', // Lepszy do gładkich krzywych
-                    samples: 100,     // Maksymalna liczba punktów po redukcji
+                    samples: 500,     // Maksymalna liczba punktów po redukcji
                 }
             },
             interaction: 
@@ -428,7 +427,6 @@ function initTempChart()
             {
                 x: 
                 {
-                    // type: 'time',
                     display: true,
                     title: 
                     {
@@ -498,32 +496,32 @@ function updateChart(temp, press)
         tempPressChart.data.datasets[1].data.push(press)
         tempPressChart.data.datasets[1].data.shift()
 
-        // tempPressChart.minVal[0] = Math.min(...tempPressChart.data.datasets[0].data)
-        // tempPressChart.maxVal[0] = Math.max(...tempPressChart.data.datasets[0].data)
-        // tempPressChart.minVal[1] = Math.min(...tempPressChart.data.datasets[1].data)
-        // tempPressChart.maxVal[1] = Math.max(...tempPressChart.data.datasets[1].data)
+        tempPressChart.minVal[0] = Math.min(...tempPressChart.data.datasets[0].data)
+        tempPressChart.maxVal[0] = Math.max(...tempPressChart.data.datasets[0].data)
+        tempPressChart.minVal[1] = Math.min(...tempPressChart.data.datasets[1].data)
+        tempPressChart.maxVal[1] = Math.max(...tempPressChart.data.datasets[1].data)
 
-        // if(tempPressChart.chart.isDatasetVisible(0) && !tempPressChart.chart.isDatasetVisible(1))
-        // {
-        //     tempPressChart.realMinVal = tempPressChart.minVal[0]
-        //     tempPressChart.realMaxVal = tempPressChart.maxVal[0]
-        //     console.log('only press')
-        // }
-        // if(tempPressChart.chart.isDatasetVisible(1) && !tempPressChart.chart.isDatasetVisible(0))
-        // {
-        //     tempPressChart.realMinVal = tempPressChart.minVal[1]
-        //     tempPressChart.realMaxVal = tempPressChart.maxVal[1]
-        //     console.log('only temp')
-        // }
-        // if(tempPressChart.chart.isDatasetVisible(0) && tempPressChart.chart.isDatasetVisible(1))
-        // {
-        //     tempPressChart.realMinVal = Math.min(tempPressChart.minVal[0], tempPressChart.minVal[1])
-        //     tempPressChart.realMaxVal = Math.max(tempPressChart.maxVal[0], tempPressChart.maxVal[1])
-        //     console.log('both')
-        // }
+        if(tempPressChart.chart.isDatasetVisible(0) && !tempPressChart.chart.isDatasetVisible(1))
+        {
+            tempPressChart.realMinVal = tempPressChart.minVal[0]
+            tempPressChart.realMaxVal = tempPressChart.maxVal[0]
+            console.log('only press')
+        }
+        if(tempPressChart.chart.isDatasetVisible(1) && !tempPressChart.chart.isDatasetVisible(0))
+        {
+            tempPressChart.realMinVal = tempPressChart.minVal[1]
+            tempPressChart.realMaxVal = tempPressChart.maxVal[1]
+            console.log('only temp')
+        }
+        if(tempPressChart.chart.isDatasetVisible(0) && tempPressChart.chart.isDatasetVisible(1))
+        {
+            tempPressChart.realMinVal = Math.min(tempPressChart.minVal[0], tempPressChart.minVal[1])
+            tempPressChart.realMaxVal = Math.max(tempPressChart.maxVal[0], tempPressChart.maxVal[1])
+            console.log('both')
+        }
         
-        // tempPressChart.chart.config.options.scales.y.min = tempPressChart.realMinVal - tempPressChart.realMinVal * 0.2
-        // tempPressChart.chart.config.options.scales.y.max =  tempPressChart.realMaxVal + tempPressChart.realMaxVal * 0.2
+        tempPressChart.chart.config.options.scales.y.min = tempPressChart.realMinVal - tempPressChart.realMinVal * 0.2
+        tempPressChart.chart.config.options.scales.y.max =  tempPressChart.realMaxVal + tempPressChart.realMaxVal * 0.2
         tempPressChart.chart.update();
     }
 }
