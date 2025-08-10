@@ -2,6 +2,7 @@
 *
 {
   font-family: 'Poppins';
+  -webkit-tap-highlight-color: transparent;
 }
 
 :root
@@ -385,12 +386,17 @@ html, body
   position: absolute;
   background-color: light-dark(var(--light-switcher-bg), var(--dark-switcher-bg));
   opacity: 0.7;
-  width: 50%;
+  /* width: 50%; */
   height: 100%;
   top: 0;
   left: 0;
   border-radius: 0.5rem;
   transition: left 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  -webkit-backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0); 
 }
 
 .switchHorizontal .option
@@ -700,6 +706,11 @@ input[type="range"]::-webkit-slider-thumb
 .h100
 {
   height: 100%;
+}
+
+.w25
+{
+  width: 25%;
 }
 
 .w30

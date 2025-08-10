@@ -35,6 +35,7 @@
     "chartjs": "^0.3.24",
     "chartjs-adapter-moment": "^1.0.1",
     "chartjs-plugin-streaming": "^2.0.0",
+    "downsample-lttb": "^0.0.1",
     "electron-settings": "^4.0.4",
     "google-protobuf": "^3.21.4",
     "jquery": "^3.7.1",

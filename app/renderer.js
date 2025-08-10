@@ -3,6 +3,7 @@ let connectingList = null
 let firstConnection = true
 let settingsObj = {cmd:2}
 let doesItNeedChangeDeviceSettings = false
+let chartWorker = new Worker('./chartWorker.js');
 
 //TOP BAR
 function initTopBar()
@@ -93,6 +94,7 @@ function initSwitchesHorizontal()
                 e.currentTarget.querySelector('.switcher').style.left = left + "px"
             }
         })
+        element.querySelector('.switcher').style.width = 100/element.querySelectorAll('.option').length + "%"
     });
 }
 
@@ -334,8 +336,6 @@ function isItConnected()
 
 //CHARTS
 Chart.defaults.font.family = 'Poppins'
-const range = (start, end) => [...Array(end - start + 1)].map((_, i) => start + i);
-const rangeDown = (start, end) => Array.from({ length: start - end + 1 }, (_, i) => start - i);
 
 //CHARTS OBJECTS
 let tempPressChart = 
@@ -345,12 +345,61 @@ let tempPressChart =
     config: {},
     chart: null,
     lastUpdate: Date.now(),
-    currentIndex: 0,
-    maxIndex: 300-1,
-    minVal: [0, 0],
-    maxVal: [0, 0],
-    realMinVal: 0,
-    realMaxVal: 0
+    labelsStep: null,
+    labelsLabels: null,
+}
+
+let chartWorkerSettings = 
+{
+    mode: '5min',
+    temp: null,
+    press: null,
+    chartMode: null
+}
+
+function setChart5min()
+{
+    console.log('5min chart')
+    tempPressChart.labelsStep = 60
+    tempPressChart.labelsLabels = ['5 min. ago', '4 min.', '3 min.', '2 min.', '1 min.', 'Now']
+    chartWorkerSettings.mode = '5min'
+    tempPressChart.chart.data.labels = new Array(301).fill(0)
+}
+
+function setChart1h()
+{
+    console.log('1h chart')
+    tempPressChart.labelsStep = 100
+    tempPressChart.labelsLabels = ['1 h. ago', '50 min.', '40 min.', '30 min.', '20 min.', '10 min.', 'Now']
+    chartWorkerSettings.mode = '1h'
+    tempPressChart.chart.data.labels = new Array(601).fill(0)
+}
+
+function setChart6h()
+{
+    console.log('6h chart')
+    tempPressChart.labelsStep = 100
+    tempPressChart.labelsLabels = ['6 h. ago', '4 h.', '2 h.', '3 h.', '2 h.', '1 h.', 'Now']
+    chartWorkerSettings.mode = '6h'
+    tempPressChart.chart.data.labels = new Array(601).fill(0)
+}
+
+function setChart12h()
+{
+    console.log('12h chart')
+    tempPressChart.labelsStep = 100
+    tempPressChart.labelsLabels = ['12 h. ago', '10 h.', '8 h.', '6 h.', '4 h.', '2 h.', 'Now']
+    chartWorkerSettings.mode = '12h'
+    tempPressChart.chart.data.labels = new Array(601).fill(0)
+}
+
+function setChart24h()
+{
+    console.log('24h chart')
+    tempPressChart.labelsStep = 100
+    tempPressChart.labelsLabels = ['24 h. ago', '20 h.', '16 h.', '12 h.', '8 h.', '4 h.', 'Now']
+    chartWorkerSettings.mode = '24h'
+    tempPressChart.chart.data.labels = new Array(601).fill(0)
 }
 
 //INITS OF THE CHARTS
@@ -360,12 +409,12 @@ function initTempChart()
 
     tempPressChart.data = 
     {
-        labels: rangeDown(tempPressChart.maxIndex+1, 0),
+        labels: null,
         datasets: 
         [{
             label: 'Temperature [°C]',
             borderColor: '#36A2EB',
-            data: new Array(tempPressChart.maxIndex + 1).fill(0),
+            data: null,
             borderWidth: 2,
             tension: 0.4,
             pointStyle: false,
@@ -374,7 +423,7 @@ function initTempChart()
         {
             label: 'Pressure [hPa]',
             borderColor: '#e04346',
-            data: new Array(tempPressChart.maxIndex + 1).fill(0),
+            data: null,
             borderWidth: 2,
             tension: 0.4,
             pointStyle: false,
@@ -415,8 +464,8 @@ function initTempChart()
                 decimation: 
                 {
                     enabled: true,
-                    algorithm: 'lttb', // Lepszy do gładkich krzywych
-                    samples: 500,     // Maksymalna liczba punktów po redukcji
+                    algorithm: 'lttb',
+                    samples: 500,
                 }
             },
             interaction: 
@@ -436,25 +485,9 @@ function initTempChart()
                     {
                         callback: function(val, index) 
                         {
-                            const showEvery = 60; 
-                            if (index % showEvery === 0) 
-                            { 
-                                switch(index / showEvery)
-                                {
-                                    case 5:
-                                        return 'Now';
-                                    case 4:
-                                        return '1 min';
-                                    case 3:
-                                        return '2 min';
-                                    case 2:
-                                        return '3 min';
-                                    case 1:
-                                        return '4 min';
-                                    case 0:
-                                        return '5 minutes ago';
-                                }
-                                // return this.getLabelForValue(val);
+                            if (index % tempPressChart.labelsStep === 0) 
+                            {   
+                                return tempPressChart.labelsLabels[index / tempPressChart.labelsStep];
                             }
                             return null;
                         },
@@ -481,6 +514,21 @@ function initTempChart()
     }
         
     tempPressChart.chart = new Chart(tempPressChart.ui, tempPressChart.config)
+
+    chartWorker.onmessage = (e) => 
+    {
+        tempPressChart.data.datasets[0].data = e.data["temp"]
+        tempPressChart.data.datasets[1].data = e.data["press"];
+        tempPressChart.chart.config.options.scales.y.min = e.data['min']
+        tempPressChart.chart.config.options.scales.y.max =  e.data['max']
+        tempPressChart.chart.update();
+    };
+
+    document.querySelector('#chartMode5min').addEventListener('click', setChart5min)
+    document.querySelector('#chartMode1h').addEventListener('click', setChart1h)
+    document.querySelector('#chartMode6h').addEventListener('click', setChart6h)
+    document.querySelector('#chartMode12h').addEventListener('click', setChart12h)
+    document.querySelector('#chartMode24h').addEventListener('click', setChart24h)
 }
 
 
@@ -488,41 +536,23 @@ function updateChart(temp, press)
 {
     if(Math.abs(Date.now() - tempPressChart.lastUpdate) >= 1000)
     {
-        tempPressChart.lastUpdate = Date.now()
-
-        //TEMP
-        tempPressChart.data.datasets[0].data.push(temp)
-        tempPressChart.data.datasets[0].data.shift()
-        tempPressChart.data.datasets[1].data.push(press)
-        tempPressChart.data.datasets[1].data.shift()
-
-        tempPressChart.minVal[0] = Math.min(...tempPressChart.data.datasets[0].data)
-        tempPressChart.maxVal[0] = Math.max(...tempPressChart.data.datasets[0].data)
-        tempPressChart.minVal[1] = Math.min(...tempPressChart.data.datasets[1].data)
-        tempPressChart.maxVal[1] = Math.max(...tempPressChart.data.datasets[1].data)
-
-        if(tempPressChart.chart.isDatasetVisible(0) && !tempPressChart.chart.isDatasetVisible(1))
-        {
-            tempPressChart.realMinVal = tempPressChart.minVal[0]
-            tempPressChart.realMaxVal = tempPressChart.maxVal[0]
-            console.log('only press')
-        }
+        chartWorkerSettings.temp = temp
+        chartWorkerSettings.press = press
         if(tempPressChart.chart.isDatasetVisible(1) && !tempPressChart.chart.isDatasetVisible(0))
         {
-            tempPressChart.realMinVal = tempPressChart.minVal[1]
-            tempPressChart.realMaxVal = tempPressChart.maxVal[1]
-            console.log('only temp')
+            chartWorkerSettings.chartMode = 'press'
         }
-        if(tempPressChart.chart.isDatasetVisible(0) && tempPressChart.chart.isDatasetVisible(1))
+        else if(tempPressChart.chart.isDatasetVisible(0) && !tempPressChart.chart.isDatasetVisible(1))
         {
-            tempPressChart.realMinVal = Math.min(tempPressChart.minVal[0], tempPressChart.minVal[1])
-            tempPressChart.realMaxVal = Math.max(tempPressChart.maxVal[0], tempPressChart.maxVal[1])
-            console.log('both')
+            chartWorkerSettings.chartMode = 'temp'
         }
-        
-        tempPressChart.chart.config.options.scales.y.min = tempPressChart.realMinVal - tempPressChart.realMinVal * 0.2
-        tempPressChart.chart.config.options.scales.y.max =  tempPressChart.realMaxVal + tempPressChart.realMaxVal * 0.2
-        tempPressChart.chart.update();
+        else 
+        {
+            // tempPressChart.chart.isDatasetVisible(0) && tempPressChart.chart.isDatasetVisible(1)
+            chartWorkerSettings.chartMode = 'both'
+        }
+        chartWorker.postMessage(chartWorkerSettings);
+        tempPressChart.lastUpdate = Date.now()
     }
 }
 
@@ -584,6 +614,15 @@ function initCommunication()
                 document.querySelector('#tempStepHolder').value = obj.tempStep.toFixed(2)
                 document.querySelector("#pressMinRange").value = obj.pressMin.toFixed(2)
                 document.querySelector('#pressStepRange').value = obj.pressStep.toFixed(2)
+                document.querySelector('#chartMode5min').click()
+                if(obj.ledSwitch == 0)
+                {
+                    updateLedSwitch('temp')
+                }
+                else
+                {
+                    updateLedSwitch('press')
+                }
                 firstConnection = false
             }
 
