@@ -21,7 +21,7 @@ onmessage = (e) =>
     pressZip = zip(staticX, press)
 
     let tab = {"temp":null, "press":null, "min":null, "max":null}
-    console.log(e.data)
+    // console.log(e.data)
     switch(e.data["mode"])
     {
         case '5min':
@@ -55,19 +55,19 @@ onmessage = (e) =>
     {
         realMinVal = minVal["press"]
         realMaxVal = maxVal["press"]
-        console.log('only press')
+        // console.log('only press')
     }
     if(e.data["chartMode"] == 'temp')
     {
         realMinVal = minVal["temp"]
         realMaxVal = maxVal["temp"]
-        console.log('only temp')
+        // console.log('only temp')
     }
     if(e.data["chartMode"] == 'both')
     {
         realMinVal = Math.min(minVal["temp"], minVal["press"])
         realMaxVal = Math.max(maxVal["temp"], maxVal["press"])
-        console.log('both')
+        // console.log('both')
     }
 
     tab["min"] = realMinVal - realMinVal * 0.2

@@ -98,6 +98,284 @@ function initSwitchesHorizontal()
     });
 }
 
+//CHARTS
+Chart.defaults.font.family = 'Poppins'
+Chart.defaults.font.weight = 'normal'
+
+//CHARTS OBJECTS
+let tempPressChart = 
+{
+    ui: null,
+    data: null,
+    config: {},
+    chart: null,
+    lastUpdate: Date.now(),
+    labelsStep: null,
+    labelsLabels: null,
+    theme: null,
+}
+
+let chartWorkerSettings = 
+{
+    mode: '5min',
+    temp: null,
+    press: null,
+    chartMode: null
+}
+
+function setChart5min()
+{
+    tempPressChart.labelsStep = 60
+    tempPressChart.labelsLabels = ['5 min. ago', '4 min.', '3 min.', '2 min.', '1 min.', 'Now']
+    chartWorkerSettings.mode = '5min'
+    tempPressChart.chart.data.labels = new Array(301).fill(0)
+    tempPressChart.config.options.plugins.title.text = 'Temperature and pressure in last 5 minutes'
+}
+
+function setChart1h()
+{
+    tempPressChart.labelsStep = 100
+    tempPressChart.labelsLabels = ['1 h. ago', '50 min.', '40 min.', '30 min.', '20 min.', '10 min.', 'Now']
+    chartWorkerSettings.mode = '1h'
+    tempPressChart.chart.data.labels = new Array(601).fill(0)
+    tempPressChart.config.options.plugins.title.text = 'Temperature and pressure in last 1 hour'
+}
+
+function setChart6h()
+{
+    tempPressChart.labelsStep = 100
+    tempPressChart.labelsLabels = ['6 h. ago', '4 h.', '2 h.', '3 h.', '2 h.', '1 h.', 'Now']
+    chartWorkerSettings.mode = '6h'
+    tempPressChart.chart.data.labels = new Array(601).fill(0)
+    tempPressChart.config.options.plugins.title.text = 'Temperature and pressure in last 6 hours'
+}
+
+function setChart12h()
+{
+    tempPressChart.labelsStep = 100
+    tempPressChart.labelsLabels = ['12 h. ago', '10 h.', '8 h.', '6 h.', '4 h.', '2 h.', 'Now']
+    chartWorkerSettings.mode = '12h'
+    tempPressChart.chart.data.labels = new Array(601).fill(0)
+    tempPressChart.config.options.plugins.title.text = 'Temperature and pressure in last 12 hours'
+}
+
+function setChart24h()
+{
+    tempPressChart.labelsStep = 100
+    tempPressChart.labelsLabels = ['24 h. ago', '20 h.', '16 h.', '12 h.', '8 h.', '4 h.', 'Now']
+    chartWorkerSettings.mode = '24h'
+    tempPressChart.chart.data.labels = new Array(601).fill(0)
+    tempPressChart.config.options.plugins.title.text = 'Temperature and pressure in last 24 hours'
+}
+
+//INITS OF THE CHARTS
+function initTempChart()
+{
+    tempPressChart.ui = document.querySelector("#tempPressChart")
+    tempPressChart.theme = document.querySelector('body')
+    tempPressChart.data = 
+    {
+        labels: null,
+        datasets: 
+        [{
+            label: 'Temperature [°C]',
+            borderColor: '#36A2EB',
+            data: null,
+            borderWidth: 2,
+            tension: 0.4,
+            pointStyle: false,
+            pointRadius: 0,
+        },
+        {
+            label: 'Pressure [hPa]',
+            borderColor: '#e04346',
+            data: null,
+            borderWidth: 2,
+            tension: 0.4,
+            pointStyle: false,
+            pointRadius: 0,
+        }]
+    }
+    
+    tempPressChart.config = 
+    {
+        type: 'line',
+        data: tempPressChart.data,
+        options: 
+        {
+            responsiveAnimationDuration: 0,
+            datasets:
+            {
+                line:
+                {
+                    pointRadius: 0
+                }
+            },
+            elements:
+            {
+                point:
+                {
+                    radius: 0
+                }
+            },
+            responsive: true,
+            animation: false,
+            plugins: 
+            {
+                title: 
+                {
+                    display: true,
+                    text: 'Temperature and pressure in last 5 minutes',
+                    font:
+                    {
+                        weight: 'normal'
+                    }
+                },
+                decimation: 
+                {
+                    enabled: true,
+                    algorithm: 'lttb',
+                    samples: 500,
+                }
+            },
+            interaction: 
+            {
+                intersect: false,
+            },
+            scales: 
+            {
+                x: 
+                {
+                    display: true,
+                    title: 
+                    {
+                        display: true
+                    },
+                    ticks: 
+                    {
+                        callback: function(val, index) 
+                        {
+                            if (index % tempPressChart.labelsStep === 0) 
+                            {   
+                                return tempPressChart.labelsLabels[index / tempPressChart.labelsStep];
+                            }
+                            return null;
+                        },
+                        autoskip: false,
+                    },
+                    grid:
+                    {
+                        color: (ctx) => 
+                        {
+                            let val = tempPressChart.theme.classList.contains('light')
+                            val += tempPressChart.theme.classList.contains('dark') << 1
+                            
+                            if(val == 0)
+                            {
+                                if(window.matchMedia('(prefers-color-scheme: light)').matches)
+                                {
+                                    val = 1;
+                                }
+                                else
+                                {
+                                    val = 2;
+                                }
+                            }
+                            switch(val)
+                            {
+                                case 1:
+                                    return '#808080'
+                                case 2:
+                                    return '#808080'
+                            }
+                        },
+                        stepSize: 1
+                    }
+                },
+                y: 
+                {
+                    grid:
+                    {
+                        color: (ctx) => 
+                        {
+                            let val = tempPressChart.theme.classList.contains('light')
+                            val += tempPressChart.theme.classList.contains('dark') << 1
+                            
+                            if(val == 0)
+                            {
+                                if(window.matchMedia('(prefers-color-scheme: light)').matches)
+                                {
+                                    val = 1;
+                                }
+                                else
+                                {
+                                    val = 2;
+                                }
+                            }
+                            switch(val)
+                            {
+                                case 1:
+                                    return '#808080'
+                                case 2:
+                                    return '#808080'
+                            }
+                        },
+                    },
+                    display: true,
+                    title: 
+                    {
+                        display: true,
+                        text: '' //Temperature [°C] and pressure [hPa]
+                    },
+                    suggestedMin: 20,
+                    suggestedMax: 40
+                }
+            }
+        },
+    }
+        
+    tempPressChart.chart = new Chart(tempPressChart.ui, tempPressChart.config)
+
+    chartWorker.onmessage = (e) => 
+    {
+        tempPressChart.data.datasets[0].data = e.data["temp"]
+        tempPressChart.data.datasets[1].data = e.data["press"];
+        tempPressChart.chart.config.options.scales.y.min = e.data['min']
+        tempPressChart.chart.config.options.scales.y.max =  e.data['max']
+        tempPressChart.chart.update();
+    };
+
+    document.querySelector('#chartMode5min').addEventListener('click', setChart5min)
+    document.querySelector('#chartMode1h').addEventListener('click', setChart1h)
+    document.querySelector('#chartMode6h').addEventListener('click', setChart6h)
+    document.querySelector('#chartMode12h').addEventListener('click', setChart12h)
+    document.querySelector('#chartMode24h').addEventListener('click', setChart24h)
+}
+
+function updateChart(temp, press)
+{
+    if(Math.abs(Date.now() - tempPressChart.lastUpdate) >= 1000)
+    {
+        chartWorkerSettings.temp = temp
+        chartWorkerSettings.press = press
+        if(tempPressChart.chart.isDatasetVisible(1) && !tempPressChart.chart.isDatasetVisible(0))
+        {
+            chartWorkerSettings.chartMode = 'press'
+        }
+        else if(tempPressChart.chart.isDatasetVisible(0) && !tempPressChart.chart.isDatasetVisible(1))
+        {
+            chartWorkerSettings.chartMode = 'temp'
+        }
+        else 
+        {
+            // tempPressChart.chart.isDatasetVisible(0) && tempPressChart.chart.isDatasetVisible(1)
+            chartWorkerSettings.chartMode = 'both'
+        }
+        chartWorker.postMessage(chartWorkerSettings);
+        tempPressChart.lastUpdate = Date.now()
+    }
+}
+
 //THEME
 function initThemes()
 {
@@ -121,6 +399,9 @@ function initThemes()
             document.querySelector('body').classList.remove('light')
         }
         document.querySelector('body').classList.add('dark')
+        Chart.defaults.backgroundColor = '#00000';
+        Chart.defaults.borderColor = '#00000';
+        Chart.defaults.color = '#ffffff';
         window.settings.set('settings.theme', 'dark')
     })
 
@@ -131,6 +412,9 @@ function initThemes()
             document.querySelector('body').classList.remove('dark')
         }
         document.querySelector('body').classList.add('light')
+        Chart.defaults.backgroundColor = '#ffffff';
+        Chart.defaults.borderColor = '#ffffff';
+        Chart.defaults.color = '#00000';
         window.settings.set('settings.theme', 'light')
     })
 }
@@ -334,228 +618,6 @@ function isItConnected()
     }
 }
 
-//CHARTS
-Chart.defaults.font.family = 'Poppins'
-
-//CHARTS OBJECTS
-let tempPressChart = 
-{
-    ui: null,
-    data: null,
-    config: {},
-    chart: null,
-    lastUpdate: Date.now(),
-    labelsStep: null,
-    labelsLabels: null,
-}
-
-let chartWorkerSettings = 
-{
-    mode: '5min',
-    temp: null,
-    press: null,
-    chartMode: null
-}
-
-function setChart5min()
-{
-    console.log('5min chart')
-    tempPressChart.labelsStep = 60
-    tempPressChart.labelsLabels = ['5 min. ago', '4 min.', '3 min.', '2 min.', '1 min.', 'Now']
-    chartWorkerSettings.mode = '5min'
-    tempPressChart.chart.data.labels = new Array(301).fill(0)
-}
-
-function setChart1h()
-{
-    console.log('1h chart')
-    tempPressChart.labelsStep = 100
-    tempPressChart.labelsLabels = ['1 h. ago', '50 min.', '40 min.', '30 min.', '20 min.', '10 min.', 'Now']
-    chartWorkerSettings.mode = '1h'
-    tempPressChart.chart.data.labels = new Array(601).fill(0)
-}
-
-function setChart6h()
-{
-    console.log('6h chart')
-    tempPressChart.labelsStep = 100
-    tempPressChart.labelsLabels = ['6 h. ago', '4 h.', '2 h.', '3 h.', '2 h.', '1 h.', 'Now']
-    chartWorkerSettings.mode = '6h'
-    tempPressChart.chart.data.labels = new Array(601).fill(0)
-}
-
-function setChart12h()
-{
-    console.log('12h chart')
-    tempPressChart.labelsStep = 100
-    tempPressChart.labelsLabels = ['12 h. ago', '10 h.', '8 h.', '6 h.', '4 h.', '2 h.', 'Now']
-    chartWorkerSettings.mode = '12h'
-    tempPressChart.chart.data.labels = new Array(601).fill(0)
-}
-
-function setChart24h()
-{
-    console.log('24h chart')
-    tempPressChart.labelsStep = 100
-    tempPressChart.labelsLabels = ['24 h. ago', '20 h.', '16 h.', '12 h.', '8 h.', '4 h.', 'Now']
-    chartWorkerSettings.mode = '24h'
-    tempPressChart.chart.data.labels = new Array(601).fill(0)
-}
-
-//INITS OF THE CHARTS
-function initTempChart()
-{
-    tempPressChart.ui = document.querySelector("#tempPressChart")
-
-    tempPressChart.data = 
-    {
-        labels: null,
-        datasets: 
-        [{
-            label: 'Temperature [°C]',
-            borderColor: '#36A2EB',
-            data: null,
-            borderWidth: 2,
-            tension: 0.4,
-            pointStyle: false,
-            pointRadius: 0,
-        },
-        {
-            label: 'Pressure [hPa]',
-            borderColor: '#e04346',
-            data: null,
-            borderWidth: 2,
-            tension: 0.4,
-            pointStyle: false,
-            pointRadius: 0,
-        }]
-    }
-
-    tempPressChart.config = 
-    {
-        type: 'line',
-        data: tempPressChart.data,
-        options: 
-        {
-            responsiveAnimationDuration: 0,
-            datasets:
-            {
-                line:
-                {
-                    pointRadius: 0
-                }
-            },
-            elements:
-            {
-                point:
-                {
-                    radius: 0
-                }
-            },
-            responsive: true,
-            animation: false,
-            plugins: 
-            {
-                title: 
-                {
-                    display: true,
-                    text: 'Temperature and pressure in last 5 minutes'
-                },
-                decimation: 
-                {
-                    enabled: true,
-                    algorithm: 'lttb',
-                    samples: 500,
-                }
-            },
-            interaction: 
-            {
-                intersect: false,
-            },
-            scales: 
-            {
-                x: 
-                {
-                    display: true,
-                    title: 
-                    {
-                        display: true
-                    },
-                    ticks: 
-                    {
-                        callback: function(val, index) 
-                        {
-                            if (index % tempPressChart.labelsStep === 0) 
-                            {   
-                                return tempPressChart.labelsLabels[index / tempPressChart.labelsStep];
-                            }
-                            return null;
-                        },
-                        autoskip: false,
-                    },
-                    grid:
-                    {
-                        stepSize: 1
-                    }
-                },
-                y: 
-                {
-                    display: true,
-                    title: 
-                    {
-                        display: true,
-                        text: '' //Temperature [°C] and pressure [hPa]
-                    },
-                    suggestedMin: 20,
-                    suggestedMax: 40
-                }
-            }
-        },
-    }
-        
-    tempPressChart.chart = new Chart(tempPressChart.ui, tempPressChart.config)
-
-    chartWorker.onmessage = (e) => 
-    {
-        tempPressChart.data.datasets[0].data = e.data["temp"]
-        tempPressChart.data.datasets[1].data = e.data["press"];
-        tempPressChart.chart.config.options.scales.y.min = e.data['min']
-        tempPressChart.chart.config.options.scales.y.max =  e.data['max']
-        tempPressChart.chart.update();
-    };
-
-    document.querySelector('#chartMode5min').addEventListener('click', setChart5min)
-    document.querySelector('#chartMode1h').addEventListener('click', setChart1h)
-    document.querySelector('#chartMode6h').addEventListener('click', setChart6h)
-    document.querySelector('#chartMode12h').addEventListener('click', setChart12h)
-    document.querySelector('#chartMode24h').addEventListener('click', setChart24h)
-}
-
-
-function updateChart(temp, press)
-{
-    if(Math.abs(Date.now() - tempPressChart.lastUpdate) >= 1000)
-    {
-        chartWorkerSettings.temp = temp
-        chartWorkerSettings.press = press
-        if(tempPressChart.chart.isDatasetVisible(1) && !tempPressChart.chart.isDatasetVisible(0))
-        {
-            chartWorkerSettings.chartMode = 'press'
-        }
-        else if(tempPressChart.chart.isDatasetVisible(0) && !tempPressChart.chart.isDatasetVisible(1))
-        {
-            chartWorkerSettings.chartMode = 'temp'
-        }
-        else 
-        {
-            // tempPressChart.chart.isDatasetVisible(0) && tempPressChart.chart.isDatasetVisible(1)
-            chartWorkerSettings.chartMode = 'both'
-        }
-        chartWorker.postMessage(chartWorkerSettings);
-        tempPressChart.lastUpdate = Date.now()
-    }
-}
-
 //INIT THE COMMUNICATION
 function initCommunication()
 {
@@ -659,7 +721,7 @@ function initCommunication()
         }
         catch(e)
         {
-            console.log(e)
+            // console.log(e)
         }
 
         //SET DATA TO SEND
@@ -763,10 +825,7 @@ document.addEventListener("DOMContentLoaded", async () =>
     initTopBar()
     initSwitchesHorizontal()
     initSwitchesVertical()
-    initThemes()
-    initLang()
     initDialogs()
-    await initSettings()
     initAboutButton()
     initCommunication()
     initPwmSettings()
@@ -774,8 +833,9 @@ document.addEventListener("DOMContentLoaded", async () =>
     initPressSettings()
     initRefreshingList()
     initTempChart()
-    // initPressChart()
-    
+    initThemes()
+    initLang()
+    await initSettings()
 
     setTimeout(() => {refreshDeviceList()}, 1000) 
 });
