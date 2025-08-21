@@ -4,6 +4,7 @@ const path = require('node:path')
 const {SerialPort} = require('serialport')
 const { InterByteTimeoutParser } = require('@serialport/parser-inter-byte-timeout')
 const {Chart} = require('chart.js/auto')
+const fs = require('fs').promises;
 
 let settings = null
 let currentWindow = null
@@ -18,7 +19,7 @@ function createWindow()
         height: 600,
         frame: false,
         transparent: true,
-        // resizable: false,
+        resizable: false,
         icon: './resources/logo.png',
         webPreferences: 
         {
@@ -27,7 +28,7 @@ function createWindow()
         }
     })
     currentWindow.loadFile('index.html')
-    currentWindow.openDevTools()
+    // currentWindow.openDevTools()
     settings = require('electron-settings')
 }
 
@@ -137,6 +138,14 @@ app.whenReady().then(() =>
     ipcMain.handle('settings.get', (event, name) => 
     {
         return settings.getSync(name)
+    })
+
+    ipcMain.handle('lang.load', async (event, name) => 
+    {
+        const configPath = path.join(__dirname, 'resources', name + '.json');
+        const data = await fs.readFile(configPath, 'utf8');
+        config = JSON.parse(data);
+        return config
     })
 
     //OTHERS

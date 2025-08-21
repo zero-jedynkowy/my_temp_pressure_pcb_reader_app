@@ -123,49 +123,79 @@ let chartWorkerSettings =
     chartMode: null
 }
 
+chart5MinLang = 
+{
+    labels: ['5 min. ago', '4 min.', '3 min.', '2 min.', '1 min.', 'Now'],
+    text: 'Temperature and pressure in last 5 minutes'
+}
+
+chart1hLang = 
+{
+    labels: ['1 h. ago', '50 min.', '40 min.', '30 min.', '20 min.', '10 min.', 'Now'],
+    text: 'Temperature and pressure in last 1 hour'
+}
+
+chart6hLang = 
+{
+    labels: ['6 h. ago', '4 h.', '2 h.', '3 h.', '2 h.', '1 h.', 'Now'],
+    text: 'Temperature and pressure in last 6 hours'
+}
+
+chart12hLang = 
+{
+    labels: ['12 h. ago', '10 h.', '8 h.', '6 h.', '4 h.', '2 h.', 'Now'],
+    text: 'Temperature and pressure in last 12 hours'
+}
+
+chart24hLang = 
+{
+    labels: ['24 h. ago', '20 h.', '16 h.', '12 h.', '8 h.', '4 h.', 'Now'],
+    text: 'Temperature and pressure in last 24 hours'
+}
+
 function setChart5min()
 {
     tempPressChart.labelsStep = 60
-    tempPressChart.labelsLabels = ['5 min. ago', '4 min.', '3 min.', '2 min.', '1 min.', 'Now']
+    tempPressChart.labelsLabels = chart5MinLang.labels
     chartWorkerSettings.mode = '5min'
     tempPressChart.chart.data.labels = new Array(301).fill(0)
-    tempPressChart.config.options.plugins.title.text = 'Temperature and pressure in last 5 minutes'
+    tempPressChart.config.options.plugins.title.text = chart5MinLang.text
 }
 
 function setChart1h()
 {
     tempPressChart.labelsStep = 100
-    tempPressChart.labelsLabels = ['1 h. ago', '50 min.', '40 min.', '30 min.', '20 min.', '10 min.', 'Now']
+    tempPressChart.labelsLabels = chart1hLang.labels
     chartWorkerSettings.mode = '1h'
     tempPressChart.chart.data.labels = new Array(601).fill(0)
-    tempPressChart.config.options.plugins.title.text = 'Temperature and pressure in last 1 hour'
+    tempPressChart.config.options.plugins.title.text = chart1hLang.text
 }
 
 function setChart6h()
 {
     tempPressChart.labelsStep = 100
-    tempPressChart.labelsLabels = ['6 h. ago', '4 h.', '2 h.', '3 h.', '2 h.', '1 h.', 'Now']
+    tempPressChart.labelsLabels = chart6hLang.labels
     chartWorkerSettings.mode = '6h'
     tempPressChart.chart.data.labels = new Array(601).fill(0)
-    tempPressChart.config.options.plugins.title.text = 'Temperature and pressure in last 6 hours'
+    tempPressChart.config.options.plugins.title.text = chart6hLang.text
 }
 
 function setChart12h()
 {
     tempPressChart.labelsStep = 100
-    tempPressChart.labelsLabels = ['12 h. ago', '10 h.', '8 h.', '6 h.', '4 h.', '2 h.', 'Now']
+    tempPressChart.labelsLabels = chart12hLang.labels
     chartWorkerSettings.mode = '12h'
     tempPressChart.chart.data.labels = new Array(601).fill(0)
-    tempPressChart.config.options.plugins.title.text = 'Temperature and pressure in last 12 hours'
+    tempPressChart.config.options.plugins.title.text = chart12hLang.text
 }
 
 function setChart24h()
 {
     tempPressChart.labelsStep = 100
-    tempPressChart.labelsLabels = ['24 h. ago', '20 h.', '16 h.', '12 h.', '8 h.', '4 h.', 'Now']
+    tempPressChart.labelsLabels = chart24hLang.labels
     chartWorkerSettings.mode = '24h'
     tempPressChart.chart.data.labels = new Array(601).fill(0)
-    tempPressChart.config.options.plugins.title.text = 'Temperature and pressure in last 24 hours'
+    tempPressChart.config.options.plugins.title.text = chart24hLang.text
 }
 
 //INITS OF THE CHARTS
@@ -420,9 +450,70 @@ function initThemes()
 }
 
 //LANG
-function loadLang(lang)
+async function loadLang(lang)
 {
-    filePath = lang + ".json"
+    result = await window.lang.load(lang)
+    for(let i=0; i<result['content'].length; i++)
+    {
+        if(result['content'][i][0] == 0)
+        {
+            document.querySelector('[data-lang="' + i + '"]').innerHTML = result['content'][i][1];
+        }
+        if(result['content'][i][0] == 1)
+        {
+            switch(result['content'][i][1])
+            {
+                case 0:
+                    chart5MinLang.text = result['content'][i][2]
+                    break;
+                case 1:
+                    chart1hLang.text = result['content'][i][2]
+                    break;
+                case 2:
+                    chart6hLang.text = result['content'][i][2]
+                    break;
+                case 3:
+                    chart12hLang.text = result['content'][i][2]
+                    break;
+                case 4:
+                    chart24hLang.text = result['content'][i][2]
+                    break;
+            }
+        }
+        if(result['content'][i][0] == 2)
+        {
+            switch(result['content'][i][1])
+            {
+                case 0:
+                    tempPressChart.data.datasets[0].label = result['content'][i][2]
+                    break;
+                case 1:
+                    tempPressChart.data.datasets[0].label = result['content'][i][2]
+                    break;
+            }
+        }
+        if(result['content'][i][0] == 3)
+        {
+            switch(result['content'][i][1])
+            {
+                case 0:
+                    chart5MinLang.labels = result['content'][i][2]
+                    break;
+                case 1:
+                    chart1hLang.labels = result['content'][i][2]
+                    break;
+                case 2:
+                    chart6hLang.labels = result['content'][i][2]
+                    break;
+                case 3:
+                    chart12hLang.labels = result['content'][i][2]
+                    break;
+                case 4:
+                    chart24hLang.labels = result['content'][i][2]
+                    break;
+            }
+        }
+    }
 }
 
 function initLang()

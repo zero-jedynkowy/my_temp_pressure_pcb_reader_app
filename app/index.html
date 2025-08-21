@@ -13,7 +13,7 @@
         <!-- TOP BAR -->
         <div id="topBar">
             <!-- TITLE -->
-            <div id="topBarTitle">TempPress App</div>
+            <div id="topBarTitle" data-lang="5">TempPress App</div>
             <div id="topBarBtns">
                 <!-- MINIMIZE THE APP -->
                 <div id="minimizeAppBtn" class="bi bi-dash-lg"></div>
@@ -29,18 +29,25 @@
             <div class="dialog hidden" id="aboutDialog">
                 <div class="dialogContent">
                     <div class="dialogTopBar">
-                        <div class="dialogTopBarTitle">About the app</div>
+                        <div class="dialogTopBarTitle" data-lang="6">About the app</div>
                         <div class="bi bi-x-lg dialogTopBarClose"></div>
                     </div>
                     <div class="dialogSubcontent">
                         <div class="col">
-                            <div>App name: TempPress</div>
-                            <div>Author: Karol Ambroziński</div>
-                            <div>To create this program was used:</div>
+                            <div data-lang="7">App name: TempPress</div>
+                            <div data-lang="8">Author: Karol Ambroziński</div>
+                            <div data-lang="9">To create this program was used:</div>
                             <ul>
-                                <li>Electron</li>
-                                <li>serialport.io</li>
-                                <li>Electron Forge</li>
+                                <li data-lang="10">Electron</li>
+                                <li data-lang="11">serialport.io</li>
+                                <li data-lang="12">Bootstrap Icons</li>
+                                <li data-lang="13">Electron Forge</li>
+                                <li data-lang="14">Chart.js</li>
+                                <li data-lang="15">Czcionka Poppins</li>
+                                <li data-lang="16">downsample-lttb</li>
+                                <li data-lang="17">JSON</li>
+                                <li data-lang="18">HTML/CSS/JavaScript</li>
+                                <li data-lang="19">electron-settings</li>
                             </ul>
                         </div>
                     </div>
@@ -50,42 +57,42 @@
             <div class="dialog hidden" id="notChoosenDeviceDialog">
                 <div class="dialogContent">
                     <div class="dialogTopBar">
-                        <div class="dialogTopBarTitle">Message</div>
+                        <div class="dialogTopBarTitle" data-lang="20">Message</div>
                         <div class="bi bi-x-lg dialogTopBarClose"></div>
                     </div>
-                    <div class="dialogSubcontent">The device wasn't choosen.</div>
+                    <div class="dialogSubcontent" data-lang="21">The device wasn't choosen.</div>
                 </div>
             </div>
 
             <div class="dialog hidden" id="connectingDialog">
                 <div class="dialogContent">
-                    <div class="dialogSubcontent">Connecting...</div>
+                    <div class="dialogSubcontent" data-lang="22">Connecting...</div>
                 </div>
             </div>
 
             <div class="dialog hidden" id="connectedDialog">
                 <div class="dialogContent">
-                    <div class="dialogSubcontent">Connected!</div>
+                    <div class="dialogSubcontent" data-lang="23">Connected!</div>
                 </div>
             </div>
 
             <div class="dialog hidden" id="cantConnectDialog">
                 <div class="dialogContent">
                     <div class="dialogTopBar">
-                        <div class="dialogTopBarTitle">Message</div>
+                        <div class="dialogTopBarTitle" data-lang="24">Message</div>
                         <div class="bi bi-x-lg dialogTopBarClose"></div>
                     </div>
-                    <div class="dialogSubcontent">Can't connect to the device!</div>
+                    <div class="dialogSubcontent" data-lang="25">Can't connect to the device!</div>
                 </div>
             </div>
 
             <div class="dialog hidden" id="disconnectedDialog">
                 <div class="dialogContent">
                     <div class="dialogTopBar">
-                        <div class="dialogTopBarTitle">Message</div>
+                        <div class="dialogTopBarTitle" data-lang="26">Message</div>
                         <div class="bi bi-x-lg dialogTopBarClose"></div>
                     </div>
-                    <div class="dialogSubcontent">The device is disconnected!</div>
+                    <div class="dialogSubcontent" data-lang="27">The device is disconnected!</div>
                 </div>
             </div>
 
@@ -95,7 +102,7 @@
                 <!-- CONNECTING DEVICE -->
                 <div class="panel fadeIn" id="connectingPanel">
                     <div class="panelContent">
-                        <div class="panelTitle">Connect a device</div>
+                        <div class="panelTitle" data-lang="0">Connect a device</div>
                         <div class="panelSubcontent">
                             <div class="row w100 h100 gap1">
                                 <div id="connectingPanelList">
@@ -114,8 +121,8 @@
                                     </div>
                                 </div>
                                 <div id="connectingPanelBtns" class="gap1 col">
-                                    <button class="btn bgGreen fwBold" id="connectBtn">Connect</button>
-                                    <button class="btn bgBlue fwBold" id="aboutBtn">About</button>
+                                    <button class="btn bgGreen fwBold" id="connectBtn" data-lang="1">Connect</button>
+                                    <button class="btn bgBlue fwBold" id="aboutBtn" data-lang="2">About</button>
                                     <div class="switchHorizontal w100">
                                         <div class="switcher"></div>
                                         <div class="option" id="plLangBtn">PL</div>
@@ -124,8 +131,8 @@
                                     <div class="switchVertical">
                                         <div class="switcher"></div>
                                         <div class="option" id="systemThemeBtn">System</div>
-                                        <div class="option" id="darkThemeBtn">Dark</div>
-                                        <div class="option" id="lightThemeBtn">Light</div>
+                                        <div class="option" id="darkThemeBtn" data-lang="3">Dark</div>
+                                        <div class="option" id="lightThemeBtn" data-lang="4">Light</div>
                                     </div>
                                 </div>
                             </div>
@@ -136,13 +143,13 @@
                 <!-- DEVICE PANEL -->
                 <div class="panel hidden" id="devicePanel">
                     <div class="panelContent">
-                        <div class="panelTitle">Device panel</div>
+                        <div class="panelTitle" data-lang="28">Device panel</div>
                         <div class="panelSubcontent">
                             <div class="col gap1">
                                 <div class="row gap1">
                                     <!-- TEMPERATURE SECTION -->
                                     <div class="col bgGreen w100 padding1 bRad0_5 gap1 textAlignCenter">
-                                        <div class="fs2">Temperature</div>
+                                        <div class="fs2" data-lang="29">Temperature</div>
                                         <div class="row fs2_5 justifyContentCenter fwBold">
                                             <div id="tempHolder">-23.32</div>
                                             <div>&nbsp;&deg;C</div>
@@ -150,7 +157,7 @@
                                     </div>
                                     <!-- PRESSURE SECTION -->
                                     <div class="col bgBlue w100 padding1 bRad0_5 gap1 textAlignCenter">
-                                        <div class="fs2">Pressure</div>
+                                        <div class="fs2" data-lang="30">Pressure</div>
                                         <div class="row fs2_5 justifyContentCenter fwBold">
                                             <div id="pressHolder">1231.00</div>
                                             <div>&nbsp;hPa</div>
@@ -163,18 +170,18 @@
                                         <div id="ledSwitchLabel">LED</div>
                                         <div class="row" id="ledSwitchContent">
                                             <div class="ledSwitchThumb"></div>
-                                            <div class="option" id="tempLedSwitch">Temperature</div>
-                                            <div class="option" id="pressLedSwitch">Pressure</div>
+                                            <div class="option" id="tempLedSwitch" data-lang="31">Temperature</div>
+                                            <div class="option" id="pressLedSwitch" data-lang="32">Pressure</div>
                                         </div>
                                     </div>
                                     <!-- DISCONNECT BUTTON -->
-                                    <button class="btn bgRed fwBold" id="disconnectBtn">Disconnect</button>
+                                    <button class="btn bgRed fwBold" id="disconnectBtn" data-lang="33">Disconnect</button>
                                 </div>
                                 <!-- PWM SETTINGS -->
                                 <div class="col gap1 bgCoral padding1 bRad0_5">
-                                    <div class="fs2">PWM Settings</div>
+                                    <div class="fs2" data-lang="34">PWM Settings</div>
                                     <div class="col gap1">
-                                        <div class="fs1_5">Frequency [Hz]</div>
+                                        <div class="fs1_5" data-lang="35">Frequency [Hz]</div>
                                         <div class="row gap1">
                                             <input type="range" id="pwmFreqRange" class="w70 textAlignCenter" min="1" max="100" value="1" step="1"/>
                                             <div class="fs2_5 w30 textAlignCenter row justifyContentCenter">
@@ -182,7 +189,7 @@
                                                 <div>&nbsp;Hz</div>
                                             </div>
                                         </div>
-                                        <div class="fs1_5">Duty [%]</div>
+                                        <div class="fs1_5" data-lang="36">Duty [%]</div>
                                         <div class="row gap1 w100">
                                             <input type="range" id="pwmDutyRange" class="w70 textAlignCenter" min="1" max="100" value="1" step="1"/>
                                             <div class="fs2_5 w30 textAlignCenter row justifyContentCenter">
@@ -194,9 +201,9 @@
                                 </div>
                                 <!-- LED SETTINGS -->
                                 <div class="col gap1 bgPinkRed padding1 bRad0_5">
-                                    <div class="fs2">LED Settings</div>
+                                    <div class="fs2" data-lang="37">LED Settings</div>
                                     <div class="col gap1">
-                                        <div class="fs1_5">Temperature min. [&deg;C]</div>
+                                        <div class="fs1_5" data-lang="38">Temperature min. [&deg;C]</div>
                                         <div class="row gap1">
                                             <input type="range" id="tempMinRange" class="w100 textAlignCenter" min="-30" max="30" value="1" step="1"/>
                                             <div class="row fs2_5 w100 textAlignCenter justifyContentCenter">
@@ -204,7 +211,7 @@
                                                 <div>&nbsp;&deg;C</div>
                                             </div>
                                         </div>
-                                        <div class="fs1_5">Temperature step [&deg;C]</div>
+                                        <div class="fs1_5" data-lang="39">Temperature step [&deg;C]</div>
                                         <div class="row gap1">
                                             <input type="range" id="tempStepRange" class="w100 textAlignCenter" min="1" max="30" value="1" step="1"/>
                                             <div class="row fs2_5 w100 textAlignCenter justifyContentCenter">
@@ -212,7 +219,7 @@
                                                 <div>&nbsp;&deg;C</div>
                                             </div>
                                         </div>
-                                        <div class="fs1_5">Pressure min. [hPa]</div>
+                                        <div class="fs1_5" data-lang="40">Pressure min. [hPa]</div>
                                         <div class="row gap1 w100">
                                             <input type="range" id="pressMinRange" class="w100 textAlignCenter" min="1" max="1000" value="1" step="1"/>
                                             <div class="row fs2_5 w100 textAlignCenter justifyContentCenter">
@@ -220,7 +227,7 @@
                                                 <div>&nbsp;hPa</div>
                                             </div>
                                         </div>
-                                        <div class="fs1_5">Pressure step [hPa]</div>
+                                        <div class="fs1_5" data-lang="41">Pressure step [hPa]</div>
                                         <div class="row gap1 w100">
                                             <input type="range" id="pressStepRange" class="w100 textAlignCenter" min="1" max="1000" value="1" step="1"/>
                                             <div class="row fs2_5 w100 textAlignCenter justifyContentCenter">
@@ -233,11 +240,11 @@
 
                                 <div class="switchHorizontal w100">
                                     <div class="switcher"></div>
-                                    <div class="option" id="chartMode5min">5 min.</div>
-                                    <div class="option" id="chartMode1h">1 godz.</div>
-                                    <div class="option" id="chartMode6h">6 godz.</div>
-                                    <div class="option" id="chartMode12h">12 godz.</div>
-                                    <div class="option" id="chartMode24h">24 godz.</div>
+                                    <div class="option" id="chartMode5min" data-lang="42">5 min.</div>
+                                    <div class="option" id="chartMode1h" data-lang="43">1 godz.</div>
+                                    <div class="option" id="chartMode6h" data-lang="44">6 godz.</div>
+                                    <div class="option" id="chartMode12h" data-lang="45">12 godz.</div>
+                                    <div class="option" id="chartMode24h" data-lang="46">24 godz.</div>
                                 </div>
 
                                 <!-- TEMP CHART -->

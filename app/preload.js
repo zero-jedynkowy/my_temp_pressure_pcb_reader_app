@@ -23,3 +23,10 @@ contextBridge.exposeInMainWorld('settings',
   set: (name, value) => ipcRenderer.invoke('settings.set', name, value),
   get: (name) => ipcRenderer.invoke('settings.get', name),
 })
+
+contextBridge.exposeInMainWorld('lang', 
+{
+  load: (name) => ipcRenderer.invoke('lang.load', name),
+})
+
+
