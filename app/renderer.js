@@ -15,6 +15,7 @@ function initTopBar()
 
     document.querySelector('#closeAppBtn').addEventListener('click', () => 
     {
+        window.connecting.close()
         window.app.close()
     })
 }
