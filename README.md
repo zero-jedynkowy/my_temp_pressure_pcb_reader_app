@@ -1,3 +1,23 @@
+<!-- <p align="center">
+  <img src="app/resources/logo.png"/>
+</p> -->
+
+<table>
+    <tr>
+        <td width="200">
+            <img src="app/resources/logo.png"/>
+        </td>
+        <td>
+            <h1>TempPress</h1>
+            <h3>Temperature and pressure device with PC app</h3>
+            <p>A device which measures temperature and pressure. Also it has diodes which are scale for the choosen measurement. Also there is a PWM diode which the user can controll.</p>
+        </td>
+    </tr>
+</table>
+
+
+
+
 # TempPress
 ## Temperature and pressure device with PC app
 
@@ -23,7 +43,8 @@ To build the APP you need type in the console:
 user@pc:~$ cd app
 ```
 
-### PC App Images
+
+## PC App Images
 
 ![alt text](readme_files/image.png)
 
@@ -31,7 +52,6 @@ user@pc:~$ cd app
 
 ![alt text](readme_files/image-2.png)
 
-### PCB Images
+## PCB Images
 
 ![alt text](readme_files/image-3.png)
-
