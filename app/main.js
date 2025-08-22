@@ -18,8 +18,11 @@ function createWindow()
         width: 700,
         height: 600,
         frame: false,
-        transparent: true,
+        transparent: false,
         resizable: false,
+        thickFrame: false,
+        titleBarStyle: 'hidden',
+        backgroundColor: '#00000000',
         icon: './resources/logo.png',
         webPreferences: 
         {
@@ -157,6 +160,7 @@ app.whenReady().then(() =>
             createWindow()
         }
     })
+    app.disableHardwareAcceleration();
 })
 
 app.on('window-all-closed', () => 
