@@ -11,6 +11,7 @@
             <h1>TempPress</h1>
             <h3>Temperature and pressure device with PC app</h3>
             <p>A device which measures temperature and pressure. Also it has diodes which are scale for the choosen measurement. Also there is a PWM diode which the user can controll.</p>
+            <br>
         </td>
     </tr>
 </table>
