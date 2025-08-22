@@ -46,30 +46,30 @@ cd app
 
 ### Connecting panel
 
-![alt text](readme_files\dark-connecting-panel-eng.png)
+![alt text](readme_files/dark-connecting-panel-eng.png)
 
-![alt text](readme_files\dark-connecting-panel-pl.png)
+![alt text](readme_files/dark-connecting-panel-pl.png)
 
-![alt text](readme_files\light-connecting-panel-eng.png)
+![alt text](readme_files/light-connecting-panel-eng.png)
 
 ### Connecting modal
 
-![alt text](readme_files\dark-connecting-eng.png)
+![alt text](readme_files/dark-connecting-eng.png)
 
 
 ### Device panel
 
-![alt text](readme_files\dark-device-panel-1-eng.png)
+![alt text](readme_files/dark-device-panel-1-eng.png)
 
-![alt text](readme_files\dark-device-panel-2-eng.png)
+![alt text](readme_files/dark-device-panel-2-eng.png)
 
-![alt text](readme_files\dark-device-panel-3-eng.png)
+![alt text](readme_files/dark-device-panel-3-eng.png)
 
-![alt text](readme_files\light-device-panel-1-eng.png)
+![alt text](readme_files/light-device-panel-1-eng.png)
 
-![alt text](readme_files\light-device-panel-2-eng.png)
+![alt text](readme_files/light-device-panel-2-eng.png)
 
-![alt text](readme_files\light-device-panel-3-eng.png)
+![alt text](readme_files/light-device-panel-3-eng.png)
 
 # Example raw communication with the device's PCB:
 
