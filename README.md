@@ -56,7 +56,6 @@ cd app
 
 ![alt text](readme_files/dark-connecting-eng.png)
 
-
 ### Device panel
 
 ![alt text](readme_files/dark-device-panel-1-eng.png)
@@ -72,6 +71,25 @@ cd app
 ![alt text](readme_files/light-device-panel-3-eng.png)
 
 # Example raw communication with the device's PCB:
+
+To have the raw connection with the device we need to use a serialport terminal with these settings:
+* baudrate: 115200
+* data bits: 8
+* parity: None
+* stop bits: 1
+Next, we need to send some command:
+* if we want to get data: we need to type ,,{"cmd":1}''
+* if we want to change some device's settings: eg. if we want to change PWM settings we need to type ,,{"cmd":1, "pwmFreq": 2, "pwmDuty": 89}''
+
+If the command is correct, the device responses with actual measurements and settings.
+
+## Example responses
+```console
+>> {"cmd": 1} #user
+>> {"ledSwitch":1,"temp":29.01,"press":992.74, "pwmFreq": 1, "pwmDuty": 50, "tempMin": 0.00, "tempStep": 5.00, "pressMin": 0.00, "pressStep": 300.00} #device
+>> {"cmd":2, "pwmFreq": 2, "pwmDuty":89} #user
+>> {"ledSwitch":1,"temp":29.08,"press":992.81, "pwmFreq": 2, "pwmDuty": 89, "tempMin": 0.00, "tempStep": 5.00, "pressMin": 0.00, "pressStep": 300.00} #device
+```
 
 ## PCB Images
 
