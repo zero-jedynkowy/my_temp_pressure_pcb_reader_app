@@ -43,14 +43,18 @@ app.whenReady().then(() =>
         currentWindow.minimize()
     })
 
-    ipcMain.handle('app.close', () => 
+    ipcMain.handle('app.close', async () => 
     {
-        if (port && port.isOpen) 
+        if(parser)
         {
-            port.close();
+            await parser.removeAllListeners();
+            parser = null;
+        }
+        if (port && port.isOpen) 
+        { 
+            await port.close();
         }
         port = null;
-        mainWindow = null;
         app.quit()
     })
 
@@ -160,7 +164,6 @@ app.whenReady().then(() =>
             createWindow()
         }
     })
-    app.disableHardwareAcceleration();
 })
 
 app.on('window-all-closed', () => 

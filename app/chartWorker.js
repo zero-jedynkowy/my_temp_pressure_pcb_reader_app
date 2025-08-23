@@ -12,6 +12,13 @@ let realMaxVal = 0
 
 onmessage = (e) => 
 {
+    if(e.data['reset'] == true)
+    {
+        temp = new Array(86_400).fill(0)
+        press = new Array(86_400).fill(0)
+        console.log("YEE")
+        return
+    }
     temp.push(e.data["temp"]);
     temp.shift()
     press.push(e.data["press"]);

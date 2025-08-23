@@ -13,9 +13,9 @@ function initTopBar()
         window.app.minimize()
     })
 
-    document.querySelector('#closeAppBtn').addEventListener('click', () => 
+    document.querySelector('#closeAppBtn').addEventListener('click', async () => 
     {
-        window.connecting.close()
+        // await window.connecting.close()
         window.app.close()
     })
 }
@@ -210,7 +210,7 @@ function initTempChart()
         datasets: 
         [{
             label: 'Temperature [°C]',
-            borderColor: '#36A2EB',
+            borderColor: '#e04346',
             data: null,
             borderWidth: 2,
             tension: 0.4,
@@ -219,7 +219,7 @@ function initTempChart()
         },
         {
             label: 'Pressure [hPa]',
-            borderColor: '#e04346',
+            borderColor: '#36A2EB',
             data: null,
             borderWidth: 2,
             tension: 0.4,
@@ -489,7 +489,7 @@ async function loadLang(lang)
                     tempPressChart.data.datasets[0].label = result['content'][i][2]
                     break;
                 case 1:
-                    tempPressChart.data.datasets[0].label = result['content'][i][2]
+                    tempPressChart.data.datasets[1].label = result['content'][i][2]
                     break;
             }
         }
@@ -693,6 +693,7 @@ function isItConnected()
     closeDialog('#connectingDialog')
     if(!firstConnection)
     {
+        chartWorker.postMessage({"reset": true});
         openDialog('#connectedDialog')
         setTimeout(() => {closeDialog('#connectedDialog')}, 1000)
         document.querySelector('#connectingPanel').addEventListener('animationend', (e) => 
