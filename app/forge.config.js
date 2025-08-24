@@ -29,6 +29,7 @@ module.exports =
         options: {
           name: "TempPress",
           productName: "TempPress",
+          description: "App for reading temperature and pressure from the custom PCB",
           icon: path.resolve(__dirname, 'resources', 'logo.png'),
           maintainer: 'Karol Ambroziński',
           homepage: 'https://github.com/zero-jedynkowy'
@@ -42,22 +43,27 @@ module.exports =
         options: {
           homepage: 'https://github.com/zero-jedynkowy',
           name: "TempPress",
+          description: "App for reading temperature and pressure from the custom PCB",
           productName: "TempPress",
           icon: path.resolve(__dirname, 'resources', 'logo.png'),
           maintainer: 'Karol Ambroziński',
         }
       }
     },
-    // {
-    //   name: '@electron-forge/maker-flatpak',
-    //   platforms: ['linux'],
-    //   config: {
-    //     options: {
-    //       categories: ['Science'],
-    //       mimeType: ['video/h264']
-    //     }
-    //   }
-    // }
+    {
+      name: '@electron-forge/maker-flatpak',
+      platforms: ['linux'],
+      config: {
+        options: {
+          id: "com.zerojedynkowy.temppress",
+          productName: "TempPress",
+          description: "App for reading temperature and pressure from the custom PCB",
+          icon: path.resolve(__dirname, 'resources', 'logo.png'),
+          maintainer: 'Karol Ambroziński',
+          categories: ['Science']
+        }
+      }
+    }
   ],
   packagerConfig: 
   {

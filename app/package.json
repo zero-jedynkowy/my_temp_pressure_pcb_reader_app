@@ -34,6 +34,7 @@
     "chartjs-plugin-streaming": "^2.0.0",
     "downsample-lttb": "^0.0.1",
     "electron-settings": "^4.0.4",
+    "electron-squirrel-startup": "^1.0.1",
     "moment": "^2.30.1",
     "serialport": "^13.0.0"
   }
