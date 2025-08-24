@@ -15,6 +15,7 @@ module.exports =
         version: '1.0.0',
         setupIcon: path.resolve(__dirname, 'resources', 'logo.ico'),
         iconUrl: path.resolve(__dirname, 'resources', 'logo.ico'),
+        loadingGif: path.resolve(__dirname, 'resources', 'loading.gif'),
       }
     },
     {
@@ -34,16 +35,22 @@ module.exports =
         }
       }
     },
-    // {
-    //   name: '@electron-forge/maker-rpm',
-    //   config: {
-    //     options: {
-    //       homepage: 'https://github.com/zero-jedynkowy'
-    //     }
-    //   }
-    // },
+    {
+      name: '@electron-forge/maker-rpm',
+      platforms: ['linux'],
+      config: {
+        options: {
+          homepage: 'https://github.com/zero-jedynkowy',
+          name: "TempPress",
+          productName: "TempPress",
+          icon: path.resolve(__dirname, 'resources', 'logo.png'),
+          maintainer: 'Karol Ambroziński',
+        }
+      }
+    },
     // {
     //   name: '@electron-forge/maker-flatpak',
+    //   platforms: ['linux'],
     //   config: {
     //     options: {
     //       categories: ['Science'],
