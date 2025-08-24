@@ -49,20 +49,6 @@ module.exports =
           maintainer: 'Karol Ambroziński',
         }
       }
-    },
-    {
-      name: '@electron-forge/maker-flatpak',
-      platforms: ['linux'],
-      config: {
-        options: {
-          id: "com.zerojedynkowy.temppress",
-          productName: "TempPress",
-          description: "App for reading temperature and pressure from the custom PCB",
-          icon: path.resolve(__dirname, 'resources', 'logo.png'),
-          maintainer: 'Karol Ambroziński',
-          categories: ['Science']
-        }
-      }
     }
   ],
   packagerConfig: 
