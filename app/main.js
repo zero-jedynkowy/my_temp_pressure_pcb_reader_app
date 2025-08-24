@@ -11,6 +11,12 @@ let currentWindow = null
 let port = null
 let parser = null
 
+try
+{
+    if (require('electron-squirrel-startup')) app.quit();
+}
+catch(e){}
+
 function createWindow() 
 {
     currentWindow = new BrowserWindow(

@@ -1,7 +1,7 @@
 {
-  "name": "my-temp-pressure-pcb-reader-app",
+  "name": "temp-press-app",
   "version": "1.0.0",
-  "description": "App for reading temperature and pressure from the custom PCB ",
+  "description": "App for reading temperature and pressure from the custom PCB",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
